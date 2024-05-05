@@ -46,9 +46,9 @@ runs:
           echo $FILES_CONFIG
           if [ "$FILES_CONFIG" != 'public' ] ; then
              echo "files版本为$FILES_CONFIG"
-             cp -vr ./openwrt-config/$ROUTER_MODEL/$FILES_CONFIG/files ./openwrt/
-             cp -vr ./openwrt-config/common/files ./openwrt/
-             cp -vr ./openwrt-config/$ROUTER_MODEL/common/files ./openwrt/
+             cp -vr ../openwrt-config/$ROUTER_MODEL/$FILES_CONFIG/files ./openwrt/
+             cp -vr ../openwrt-config/common/files ./openwrt/
+             cp -vr ../openwrt-config/$ROUTER_MODEL/common/files ./openwrt/
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-up
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-down
           else
