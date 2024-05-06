@@ -79,6 +79,7 @@ runs:
           echo '当前执行步骤：6-组织产出文件'
           echo "当前工作目录"
           pwd
+          df -h
           cd ./OpenWRT-Action
           rm -rf ./artifact/
           mkdir -p ./artifact/
