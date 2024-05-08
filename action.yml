@@ -46,15 +46,19 @@ runs:
           #echo $FILES_CONFIG
           if [ "$FILES_CONFIG" != 'public' ] ; then
              echo "files版本为$FILES_CONFIG"             
+             echo "-正在复制common"
              cp -vr ../openwrt-config/common/files ./openwrt/
+             echo "-正在复制common-$FILES_CONFIG"
              cp -vr ../openwrt-config/common/$FILES_CONFIG/files ./openwrt/
+             echo "-正在复制$ROUTER_MODEL-common"
              cp -vr ../openwrt-config/$ROUTER_MODEL/common/files ./openwrt/
+             echo "-正在复制$ROUTER_MODEL-$FILES_CONFIG"
              cp -vr ../openwrt-config/$ROUTER_MODEL/$FILES_CONFIG/files ./openwrt/
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-up
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-down
-             echo '修改版本号'
+             echo '-修改版本号'
              sed -i 's/R23.8.23/R23.8.23-$FILES_CONFIG/g' ./openwrt/package/lean/default-settings/files/zzz-default-settings 
-             echo 'files文件总览：'
+             echo '-files文件总览：'
              tree ./openwrt/files
           else
              echo '-当前为public版本，跳过'
