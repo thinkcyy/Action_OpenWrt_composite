@@ -42,22 +42,21 @@ runs:
           
           echo '当前执行步骤：3-添加自定义配置files'
           echo "当前工作目录"
-          pwd
-          #echo $FILES_CONFIG
+          pwd          
           if [ "$FILES_CONFIG" != 'public' ] ; then
              echo "files版本为$FILES_CONFIG"             
              echo "-正在复制common"
              cp -vr ../openwrt-config/common/files ./openwrt/
-             echo "-正在复制common-$FILES_CONFIG"
+             echo "-正在复制common-${{ env.FILES_CONFIG }}"
              cp -vr ../openwrt-config/common/$FILES_CONFIG/files ./openwrt/
-             echo "-正在复制$ROUTER_MODEL-common"
+             echo "-正在复制${{ env.ROUTER_MODEL }}-common"
              cp -vr ../openwrt-config/$ROUTER_MODEL/common/files ./openwrt/
-             echo "-正在复制$ROUTER_MODEL-$FILES_CONFIG"
+             echo "-正在复制${{ env.ROUTER_MODEL }}-${{ env.FILES_CONFIG }}"
              cp -vr ../openwrt-config/$ROUTER_MODEL/$FILES_CONFIG/files ./openwrt/
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-up
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-down
              echo '-修改版本号'
-             sed -i 's/R23.8.23/R23.8.23-$FILES_CONFIG/g' ./openwrt/package/lean/default-settings/files/zzz-default-settings 
+             sed -i 's/R23.8.23/R23.8.23-${{ env.FILES_CONFIG }}/g' ./openwrt/package/lean/default-settings/files/zzz-default-settings 
              echo '-files文件总览：'
              tree ./openwrt/files
           else
