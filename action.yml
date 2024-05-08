@@ -52,6 +52,10 @@ runs:
              cp -vr ../openwrt-config/$ROUTER_MODEL/$FILES_CONFIG/files ./openwrt/
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-up
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-down
+             #修改版本号
+             sed -i 's/R23.8.23/R23.8.23-$FILES_CONFIG/g' ./openwrt/package/lean/default-settings/files/zzz-default-settings 
+             echo 'files文件总览：'
+             tree -L 3 ./openwrt/files
           else
              echo '-当前为public版本，跳过'
           fi          
