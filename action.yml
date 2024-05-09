@@ -57,6 +57,7 @@ runs:
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-down
              echo '-修改版本号'
              sed -i 's/R23.8.23/R23.8.23-${{ env.FILES_CONFIG }}/g' ./openwrt/package/lean/default-settings/files/zzz-default-settings 
+             cat ./openwrt/package/lean/default-settings/files/zzz-default-settings | grep DISTRIB_REVISION
              echo '-files文件总览：'
              tree ./openwrt/files
           else
