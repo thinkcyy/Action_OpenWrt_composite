@@ -62,9 +62,11 @@ runs:
              cat ./openwrt/package/lean/default-settings/files/zzz-default-settings | grep DISTRIB_REVISION
              echo '-撤销默认开启wifi'
              sed -i '/\/etc\/config\/wireless/d' ./openwrt/package/lean/default-settings/files/zzz-default-settings
-             sed -i '/\/lib\/wifi\/mac80211.sh/d' ./openwrt/package/lean/default-settings/files/zzz-default-settings
+             sed -i '/\/lib\/wifi\/mac80211.sh/d' ./openwrt/package/lean/default-settings/files/zzz-default-settings             
+             echo '-向后调整tinc服务启动次序'
+             sed -i "20i sed -i \'s|START=42|START=99|g\' \/etc\/init.d\/tinc" ./openwrt/package/lean/default-settings/files/zzz-default-settings
              echo '-zzz-default-settings文件内容：'
-             cat ./openwrt/package/lean/default-settings/files/zzz-default-settings                        
+             cat ./openwrt/package/lean/default-settings/files/zzz-default-settings
           else
              echo '-当前为public版本，跳过'
           fi          
