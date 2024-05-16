@@ -66,6 +66,9 @@ runs:
              echo '-向后调整tinc服务启动次序'
              #sed -i "20i sed -i \'s|START=42|START=99|g\' \/etc\/init.d\/tinc" ./openwrt/package/lean/default-settings/files/zzz-default-settings
              sed -i 's|START=42|START=99|g' ./openwrt/feeds/packages/net/tinc/files/tinc.init
+             echo '-移除frp日志'
+             #sed -i "20i sed -i \'s|logger -t FRPC \'Shutting down frp service\'|#logger -t FRPC \'Shutting down frp service\'|g\' \/etc\/init.d\/frp" ./openwrt/package/lean/default-settings/files/zzz-default-settings
+             sed -i "20i sed -i \'s|logger -t FRPC|#logger -t FRPC|g\' \/etc\/init.d\/frp" ./openwrt/package/lean/default-settings/files/zzz-default-settings
              echo '-zzz-default-settings文件内容：'
              cat ./openwrt/package/lean/default-settings/files/zzz-default-settings
           else
