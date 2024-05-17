@@ -24,7 +24,7 @@ inputs:
   REPO_DEPTH: 
     description: 
     required: false
-    default: '1'
+    default: 'all'
   REPO_COMMIT: 
     description: 
     required: false
