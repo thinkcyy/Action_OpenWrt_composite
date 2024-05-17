@@ -45,7 +45,9 @@ runs:
           git clone --depth 1  https://github.com/thinkcyy/OpenWRT-Action OpenWRT-Action 
           #git clone --depth 1  https://github.com/coolsnowwolf/lede -b master --single-branch ./OpenWRT-Action/openwrt
           git clone $([[ ${{ inputs.REPO_DEPTH }} != 'all' ]] && echo --depth ${{ inputs.REPO_DEPTH }} || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./OpenWRT-Action/openwrt
+          cd ./OpenWRT-Action/openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
+          cd ../../
           tree -L 3
           
           echo '当前执行步骤：2-处理Package'
