@@ -44,7 +44,7 @@ runs:
           echo '当前执行步骤：1-下载LeanWRT仓库'
           git clone --depth 1  https://github.com/thinkcyy/OpenWRT-Action OpenWRT-Action 
           #git clone --depth 1  https://github.com/coolsnowwolf/lede -b master --single-branch ./OpenWRT-Action/openwrt
-          git clone $([[ ${{ env.REPO_DEPTH }} != 'all' ]] && echo --depth ${{ env.REPO_DEPTH }} || echo ) https://github.com/${{ env.OP_REPO }} -b ${{ env.REPO_BRANCH }} --single-branch ./OpenWRT-Action/openwrt
+          git clone $([[ ${{ env.REPO_DEPTH }} != 'all' ]] && echo --depth ${{ env.REPO_DEPTH }} || echo ) https://github.com/${{ env.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./OpenWRT-Action/openwrt
           tree -L 3
           
           echo '当前执行步骤：2-处理Package'
