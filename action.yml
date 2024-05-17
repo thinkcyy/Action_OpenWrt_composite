@@ -8,7 +8,7 @@ inputs:
   COMPILE_CONFIG: 
     description: 'CONFIG'
     required: true
-    default: 'EA8500-20240424-remove-igmpproxy'
+    default: 'EA8500-20240511-VPN'
   FILES_CONFIG: 
     description: 
     required: false
@@ -34,10 +34,10 @@ runs:
   steps:
     - name: Compile      
       shell: bash
-      env:
-        ROUTER_MODEL.: ${{ inputs.ROUTER_MODEL }}   
-        COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
-        FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
+#      env:
+#        ROUTER_MODEL.: ${{ inputs.ROUTER_MODEL }}   
+#        COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
+#        FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
       run:  |
           echo "当前工作目录"
           pwd          
@@ -45,6 +45,7 @@ runs:
           git clone --depth 1  https://github.com/thinkcyy/OpenWRT-Action OpenWRT-Action 
           #git clone --depth 1  https://github.com/coolsnowwolf/lede -b master --single-branch ./OpenWRT-Action/openwrt
           git clone $([[ ${{ inputs.REPO_DEPTH }} != 'all' ]] && echo --depth ${{ inputs.REPO_DEPTH }} || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./OpenWRT-Action/openwrt
+          $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           tree -L 3
           
           echo '当前执行步骤：2-处理Package'
@@ -53,22 +54,22 @@ runs:
           pwd 
           tree -L 3
           chmod +x ./LeanWRT/scripts/*.sh
-          cp -vr ./LeanWRT/config/$COMPILE_CONFIG.config ./LeanWRT/config/config-$ROUTER_MODEL.config
+          cp -vr ./LeanWRT/config/${{ inputs.COMPILE_CONFIG }}.config ./LeanWRT/config/config-${{ inputs.ROUTER_MODEL }}.config
           ./LeanWRT/scripts/prepare.sh
           
           echo '当前执行步骤：3-添加自定义配置files'
           echo "当前工作目录"
           pwd          
-          if [ "$FILES_CONFIG" != 'public' ] ; then
-             echo "files版本为$FILES_CONFIG"             
+          if [ "${{ inputs.FILES_CONFIG }}" != 'public' ] ; then
+             echo "files版本为${{ inputs.FILES_CONFIG }}"             
              echo "-正在复制common"
              cp -vr ../openwrt-config/common/files ./openwrt/
              echo "-正在复制common-${{ env.FILES_CONFIG }}"
-             cp -vr ../openwrt-config/common/$FILES_CONFIG/files ./openwrt/
+             cp -vr ../openwrt-config/common/${{ inputs.FILES_CONFIG }}/files ./openwrt/
              echo "-正在复制${{ env.ROUTER_MODEL }}-common"
-             cp -vr ../openwrt-config/$ROUTER_MODEL/common/files ./openwrt/
+             cp -vr ../openwrt-config/${{ inputs.ROUTER_MODEL }}/common/files ./openwrt/
              echo "-正在复制${{ env.ROUTER_MODEL }}-${{ env.FILES_CONFIG }}"
-             cp -vr ../openwrt-config/$ROUTER_MODEL/$FILES_CONFIG/files ./openwrt/
+             cp -vr ../openwrt-config/${{ inputs.ROUTER_MODEL }}/${{ inputs.FILES_CONFIG }}/files ./openwrt/
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-up
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-down
              echo '-files文件总览：'
@@ -99,10 +100,10 @@ runs:
           make -j$(nproc) || make -j1 V=s
           
           echo '当前执行步骤：5-打标'
-          if [ "$FILES_CONFIG" != 'public' ] ; then
-             tag_name=$COMPILE_CONFIG-$FILES_CONFIG
+          if [ "${{ inputs.FILES_CONFIG }}" != 'public' ] ; then
+             tag_name=${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}
           else
-             tag_name=$COMPILE_CONFIG
+             tag_name=${{ inputs.COMPILE_CONFIG }}
           fi
           tag_name=$tag_name-$(date +%Y%m%d-%H%M)
           echo $tag_name
@@ -120,7 +121,7 @@ runs:
           mkdir -p ./artifact/
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
-          cp -vr ./openwrt/.config ./artifact/defconfig-$COMPILE_CONFIG.config
+          cp -vr ./openwrt/.config ./artifact/defconfig-${{ inputs.COMPILE_CONFIG }}.config
           cd ./artifact/
           rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
           ls -Ahl
