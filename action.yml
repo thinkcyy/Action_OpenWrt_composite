@@ -34,10 +34,10 @@ runs:
   steps:
     - name: Compile      
       shell: bash
-#      env:
-#        ROUTER_MODEL.: ${{ inputs.ROUTER_MODEL }}   
-#        COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
-#        FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
+      env:
+        ROUTER_MODEL.: ${{ inputs.ROUTER_MODEL }}   
+        COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
+        FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
       run:  |
           echo "当前工作目录"
           pwd          
