@@ -78,7 +78,7 @@ runs:
              echo '-files文件总览：'
              tree ./openwrt/files
              echo '-修改版本号'
-             sed -i 's|echo \"DISTRIB_REVISION=\'|echo \"DISTRIB_REVISION=\'${{ env.COMPILE_CONFIG }}-|g' ./openwrt/package/lean/default-settings/files/zzz-default-settings 
+             sed -i "s|='R|='${{ inputs.COMPILE_CONFIG }}-R|g" ./openwrt/package/lean/default-settings/files/zzz-default-settings 
              cat ./openwrt/package/lean/default-settings/files/zzz-default-settings | grep DISTRIB_REVISION
              echo '-撤销默认开启wifi'
              sed -i '/\/etc\/config\/wireless/d' ./openwrt/package/lean/default-settings/files/zzz-default-settings
@@ -118,7 +118,7 @@ runs:
           echo '当前执行步骤：6-组织产出文件'          
           cd ./OpenWRT-Action
           echo "targets产出文件："
-          ls -lh ./openwrt/bin/targets
+          tree  ./openwrt/bin/targets/
           rm -rf ./artifact/
           mkdir -p ./artifact/
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
