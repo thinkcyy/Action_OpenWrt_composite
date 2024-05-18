@@ -115,10 +115,10 @@ runs:
     - name: Organize files      
       shell: bash
       run: |                             
-          echo '当前执行步骤：6-组织产出文件'
-          echo "targets产出文件："
+          echo '当前执行步骤：6-组织产出文件'          
           cd ./OpenWRT-Action
-          ls -Ahl ./openwrt/bin/targets
+          echo "targets产出文件："
+          ls -lh ./openwrt/bin/targets
           rm -rf ./artifact/
           mkdir -p ./artifact/
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
@@ -126,7 +126,7 @@ runs:
           cp -vr ./openwrt/.config ./artifact/defconfig-${{ inputs.COMPILE_CONFIG }}.config
           cd ./artifact/
           rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
-          ls -Ahl
+          ls -hl
           
     - name: Upload artifact
       uses: actions/upload-artifact@main
