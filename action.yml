@@ -126,7 +126,7 @@ runs:
           mkdir -p ./artifact/
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
-          cp -vr ./openwrt/.config ./artifact/defconfig-${{ inputs.COMPILE_CONFIG }}.config
+          cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config
           cd ./artifact/
           rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
           ls -hl
