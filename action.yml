@@ -110,7 +110,7 @@ runs:
              tag_name=${{ inputs.COMPILE_CONFIG }}
           fi
           
-          tag_name=$COMMITHASH-$tag_name-$(date +%Y%m%d-%H%M)
+          tag_name=$tag_name-$(date +%Y%m%d-%H%M)-$COMMITHASH
           
           echo $tag_name
           echo "TAG_NAME=$tag_name" >> $GITHUB_ENV  
