@@ -134,5 +134,5 @@ runs:
     - name: Upload artifact
       uses: actions/upload-artifact@main
       with:
-        name: OpenWrt-${{ env.TAG_NAME }}
+        name: LeanWrt-${{ env.TAG_NAME }}
         path: ./OpenWRT-Action/artifact/
