@@ -38,8 +38,7 @@ runs:
         ROUTER_MODEL: ${{ inputs.ROUTER_MODEL }}   
         COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
         FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
-      run:  |
-          set +e
+      run:  |          
           echo "当前工作目录"
           pwd          
           echo '当前执行步骤：1-下载LeanWRT仓库'
@@ -66,6 +65,8 @@ runs:
           echo "当前工作目录"
           pwd          
           if [ "${{ inputs.FILES_CONFIG }}" != 'public' ] ; then
+             # 忽略错误
+             set +e
              echo "files版本为${{ inputs.FILES_CONFIG }}"             
              echo "-正在复制common"
              cp -vr ../openwrt-config/common/files ./openwrt/
@@ -93,9 +94,11 @@ runs:
              sed -i "20i sed -i \'s|logger -t FRPC|#logger -t FRPC|g\' \/etc\/init.d\/frp" ./openwrt/package/lean/default-settings/files/zzz-default-settings
              echo '-zzz-default-settings文件内容：'
              cat ./openwrt/package/lean/default-settings/files/zzz-default-settings
+             # 遇错退出
+             set -e
           else
              echo '-当前为public版本，跳过'
-          fi          
+          fi                       
           
           echo '当前执行步骤：4-编译'
           cd ./openwrt
