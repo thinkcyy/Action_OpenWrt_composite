@@ -39,6 +39,7 @@ runs:
         COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
         FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
       run:  |
+          set +e
           echo "当前工作目录"
           pwd          
           echo '当前执行步骤：1-下载LeanWRT仓库'
