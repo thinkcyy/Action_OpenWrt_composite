@@ -79,21 +79,7 @@ runs:
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-up
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-down
              echo '-files文件总览：'
-             tree ./openwrt/files
-             echo '-修改版本号'
-             sed -i "s|='R|='${{ inputs.COMPILE_CONFIG }}-$(date +%Y%m%d)-R|g" ./openwrt/package/lean/default-settings/files/zzz-default-settings 
-             cat ./openwrt/package/lean/default-settings/files/zzz-default-settings | grep DISTRIB_REVISION
-             echo '-撤销默认开启wifi'
-             sed -i '/\/etc\/config\/wireless/d' ./openwrt/package/lean/default-settings/files/zzz-default-settings
-             sed -i '/\/lib\/wifi\/mac80211.sh/d' ./openwrt/package/lean/default-settings/files/zzz-default-settings             
-             echo '-向后调整tinc服务启动次序'
-             #sed -i "20i sed -i \'s|START=42|START=99|g\' \/etc\/init.d\/tinc" ./openwrt/package/lean/default-settings/files/zzz-default-settings
-             sed -i 's|START=42|START=99|g' ./openwrt/feeds/packages/net/tinc/files/tinc.init
-             echo '-移除frp日志'
-             #sed -i "20i sed -i \'s|logger -t FRPC \'Shutting down frp service\'|#logger -t FRPC \'Shutting down frp service\'|g\' \/etc\/init.d\/frp" ./openwrt/package/lean/default-settings/files/zzz-default-settings
-             sed -i "20i sed -i \'s|logger -t FRPC|#logger -t FRPC|g\' \/etc\/init.d\/frp" ./openwrt/package/lean/default-settings/files/zzz-default-settings
-             echo '-zzz-default-settings文件内容：'
-             cat ./openwrt/package/lean/default-settings/files/zzz-default-settings
+             tree ./openwrt/files             
              # 遇错退出
              set -e
           else
