@@ -28,7 +28,11 @@ inputs:
   REPO_COMMIT: 
     description: 
     required: false
-    default: 'latest'     
+    default: 'latest'   
+  REPO_TYPE: 
+    description: 
+    required: false
+    default: 'LeanWRT'     
 runs:
   using: "composite"
   steps:
@@ -38,10 +42,11 @@ runs:
         ROUTER_MODEL: ${{ inputs.ROUTER_MODEL }}   
         COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
         FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
+        REPO_TYPE: ${{ inputs.REPO_TYPE }}
       run:  |          
           echo "当前工作目录"
           pwd          
-          echo '当前执行步骤：1-下载LeanWRT仓库'
+          echo '当前执行步骤：1-下载${{ inputs.REPO_TYPE }}仓库'
           git clone --depth 1  https://github.com/thinkcyy/OpenWRT-Action OpenWRT-Action 
           #git clone --depth 1  https://github.com/coolsnowwolf/lede -b master --single-branch ./OpenWRT-Action/openwrt
           git clone $([[ ${{ inputs.REPO_DEPTH }} != 'all' ]] && echo --depth ${{ inputs.REPO_DEPTH }} || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./OpenWRT-Action/openwrt
@@ -56,10 +61,10 @@ runs:
           echo "当前工作目录"
           pwd 
           tree -L 3
-          chmod +x ./LeanWRT/scripts/*.sh
-          cp -vr ./LeanWRT/config/${{ inputs.COMPILE_CONFIG }}.config ./LeanWRT/config/config-${{ inputs.ROUTER_MODEL }}.config
-          #cp -vr ./LeanWRT/config/${{ inputs.COMPILE_CONFIG }}.config ./openwrt/.config
-          ./LeanWRT/scripts/prepare.sh
+          chmod +x ./${{ inputs.REPO_TYPE }}/scripts/*.sh
+          cp -vr ./${{ inputs.REPO_TYPE }}/config/${{ inputs.COMPILE_CONFIG }}.config ./${{ inputs.REPO_TYPE }}/config/config-${{ inputs.ROUTER_MODEL }}.config
+          #cp -vr ./${{ inputs.REPO_TYPE }}/config/${{ inputs.COMPILE_CONFIG }}.config ./openwrt/.config
+          ./${{ inputs.REPO_TYPE }}/scripts/prepare.sh
           
           echo '当前执行步骤：3-添加自定义配置files'
           echo "当前工作目录"
@@ -138,5 +143,5 @@ runs:
     - name: Upload artifact
       uses: actions/upload-artifact@main
       with:
-        name: LeanWrt-${{ env.TAG_NAME }}
+        name: ${{ inputs.REPO_TYPE }}-${{ env.TAG_NAME }}
         path: ./OpenWRT-Action/artifact/
