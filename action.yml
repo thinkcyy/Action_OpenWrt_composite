@@ -94,7 +94,9 @@ runs:
           echo '当前执行步骤：4.1-下载'
           make download -j$(nproc)
           echo '当前执行步骤：4.2-编译'
-          make -j$(nproc) || make -j1 V=s
+          #make -j$(nproc) || make -j1 V=s
+          make V=s; while [ $(($?)) -ne 0 ]; do make V=s; done
+
           
           echo '当前执行步骤：5-打标'
           if [ "${{ inputs.FILES_CONFIG }}" != 'public' ] ; then
