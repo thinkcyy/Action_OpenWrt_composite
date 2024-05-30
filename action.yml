@@ -42,6 +42,7 @@ runs:
         ROUTER_MODEL: ${{ inputs.ROUTER_MODEL }}   
         COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
         FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
+        REPO_TYPE: ${{ inputs.REPO_TYPE }}
       run:  |          
           echo "当前工作目录"
           pwd          
@@ -60,12 +61,12 @@ runs:
           echo "当前工作目录"
           pwd 
           tree -L 3
-          chmod +x ./OpenWrt/scripts/*.sh
-          cp -vr ./OpenWrt/config/${{ inputs.COMPILE_CONFIG }}.config ./OpenWrt/config/config-${{ inputs.ROUTER_MODEL }}.config
-          #cp -vr ./OpenWrt/config/${{ inputs.COMPILE_CONFIG }}.config ./openwrt/.config
+          chmod +x ./$REPO_TYPE/scripts/*.sh
+          cp -vr ./$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG }}.config ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+          #cp -vr ./$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG }}.config ./openwrt/.config
           echo "prepare.sh内容"
-          cat ./OpenWrt/scripts/prepare.sh
-          ./OpenWrt/scripts/prepare.sh
+          cat ./$REPO_TYPE/scripts/prepare.sh
+          ./$REPO_TYPE/scripts/prepare.sh
           
           
           echo '当前执行步骤：3-添加自定义配置files'
