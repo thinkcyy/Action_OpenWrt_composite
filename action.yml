@@ -87,6 +87,8 @@ runs:
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-down
              echo '-files文件总览：'
              tree ./openwrt/files             
+             echo '-向后调整tinc服务启动次序'             
+             sed -i 's|START=42|START=99|g' ./openwrt/feeds/packages/net/tinc/files/tinc.init
              # 遇错退出
              set -e
           else
