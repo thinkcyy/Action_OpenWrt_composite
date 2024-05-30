@@ -28,7 +28,11 @@ inputs:
   REPO_COMMIT: 
     description: 
     required: false
-    default: 'latest'     
+    default: 'latest' 
+  REPO_TYPE: 
+    description: 
+    required: false
+    default: 'OpenWRT'     
 runs:
   using: "composite"
   steps:
@@ -129,5 +133,5 @@ runs:
     - name: Upload artifact
       uses: actions/upload-artifact@main
       with:
-        name: OpenWrt-${{ env.TAG_NAME }}
+        name: ${{ inputs.REPO_TYPE }}-${{ env.TAG_NAME }}
         path: ./OpenWRT-Action/artifact/
