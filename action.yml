@@ -9,6 +9,10 @@ inputs:
     description: 'CONFIG'
     required: true
     default: 'EA8500-20240524-23.05-init'
+  IMAGEBUILDER: 
+    description: 'IMAGEBUILDER'
+    required: false
+    default: 'n'
   FILES_CONFIG: 
     description: 
     required: false
@@ -126,11 +130,19 @@ runs:
           tree  ./openwrt/bin/targets/
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
-          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
-          cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config
-          cd ./artifact/
-          rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
+          
+          if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
+             cp -vr ./openwrt/bin/ ./artifact/ 
+          else
+             cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
+             cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
+             cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config          
+             cd ./artifact/
+             rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
+          fi 
+          
+          ls -hl
+
           ls -hl
           
     - name: Upload artifact
