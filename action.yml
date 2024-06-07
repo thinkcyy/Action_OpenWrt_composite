@@ -132,7 +132,9 @@ runs:
           mkdir -p ./artifact/
           
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
-             cp -vr ./openwrt/bin/ ./artifact/ 
+             # cp -vr ./openwrt/bin/ ./artifact/ 
+             cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*imagebuilder*") ./artifact/
+             rename 's/tar.xz/-${{ env.TAG_NAME }}.tar.xz/' *
           else
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
