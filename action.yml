@@ -147,12 +147,10 @@ runs:
              rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
           fi 
           
-          ls -hl
-
-          ls -hl
+          ls -hl ./artifact/
           
     - name: Upload artifact
       uses: actions/upload-artifact@main
       with:
-        name: ${{ inputs.REPO_TYPE }}-$([[ ${{ inputs.IMAGEBUILDER }} = 'y' ]] && echo ImageBuilder- || echo "")${{ env.TAG_NAME }}
+        name: ${{ inputs.REPO_TYPE }}$([[ ${{ inputs.IMAGEBUILDER }} = 'y' ]] && echo -ImageBuilder- || echo -)${{ env.TAG_NAME }}
         path: ./OpenWRT-Action/artifact/
