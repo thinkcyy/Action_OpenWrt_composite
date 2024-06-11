@@ -138,19 +138,22 @@ runs:
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
              # cp -vr ./openwrt/bin/ ./artifact/ 
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*imagebuilder*") ./artifact/
+             cd ./artifact/
              rename 's/tar.xz/-${{ env.TAG_NAME }}.tar.xz/' *
+             tag_name=Imagebuilder-$tag_name 
+             echo $tag_name
+             echo "TAG_NAME=$tag_name" >> $GITHUB_ENV
           else
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
              cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config          
              cd ./artifact/
              rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
-          fi 
-          
-          ls -hl ./artifact/
+          fi           
+          ls -hl 
           
     - name: Upload artifact
       uses: actions/upload-artifact@main
       with:
-        name: ${{ inputs.REPO_TYPE }}-$([[ ${{ inputs.IMAGEBUILDER }} = 'y' ]] && echo 'ImageBuilder-')${{ env.TAG_NAME }}
+        name: ${{ inputs.REPO_TYPE }}-${{ env.TAG_NAME }}
         path: ./OpenWRT-Action/artifact/
