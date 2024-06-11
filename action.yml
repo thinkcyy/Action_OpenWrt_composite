@@ -138,6 +138,7 @@ runs:
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
              # cp -vr ./openwrt/bin/ ./artifact/ 
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*imagebuilder*") ./artifact/
+             cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
              cd ./artifact/
              rename 's/tar.xz/-${{ env.TAG_NAME }}.tar.xz/' *
              tag_name=Imagebuilder-$tag_name 
