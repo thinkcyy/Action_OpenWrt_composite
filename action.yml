@@ -163,3 +163,11 @@ runs:
       with:
         name: ${{ inputs.REPO_TYPE }}-${{ env.TAG_NAME }}
         path: ./OpenWRT-Action/artifact/
+        
+    - name: Addtional bin for release      
+      shell: bash
+      run: |                             
+          echo '当前执行步骤：7-添加额外发布文件'    
+          cd ./OpenWRT-Action
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sdk*") ./artifact/
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*toolchain*") ./artifact/
