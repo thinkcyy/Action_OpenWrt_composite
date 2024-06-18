@@ -55,9 +55,7 @@ runs:
           git clone $([[ ${{ inputs.REPO_DEPTH }} != 'all' ]] && echo --depth ${{ inputs.REPO_DEPTH }} || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./OpenWRT-Action/openwrt
           cd ./OpenWRT-Action/openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
-          COMMITHASH=$(git rev-parse --short HEAD)
-          #默认设置
-          cp -vr ../${{ inputs.REPO_TYPE }}/thinkcy-default-settings ./package/
+          COMMITHASH=$(git rev-parse --short HEAD)          
           cd ../../
           tree -L 3
           
