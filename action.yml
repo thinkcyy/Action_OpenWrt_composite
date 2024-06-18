@@ -61,6 +61,7 @@ runs:
           cd ./OpenWRT-Action/openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)
+          cp -vr ../${{ inputs.REPO_TYPE }}/default-settings ./package/
           cd ../../
           tree -L 3
           
@@ -98,6 +99,9 @@ runs:
              chmod 400 ./openwrt/files/etc/dropbear/authorized_keys
              echo '-files文件总览：'
              tree ./openwrt/files             
+             echo '-修改版本号'
+             sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)-|g" ./openwrt/package/default-settings/files/zzz-default-settings 
+             cat ./openwrt/package/lean/default-settings/files/zzz-default-settings | grep DISTRIB_REVISION             
              echo '-向后调整tinc服务启动次序'             
              sed -i 's|START=42|START=99|g' ./openwrt/feeds/packages/net/tinc/files/tinc.init
              # 遇错退出
