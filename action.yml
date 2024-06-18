@@ -51,12 +51,12 @@ runs:
           echo "当前工作目录"
           pwd          
           echo '当前执行步骤：1-下载${{ inputs.REPO_TYPE }}仓库'
-          git clone --depth 1  https://github.com/thinkcyy/OpenWRT-Action OpenWRT-Action 
-          #git clone --depth 1  https://github.com/coolsnowwolf/lede -b master --single-branch ./OpenWRT-Action/openwrt
+          git clone --depth 1  https://github.com/thinkcyy/OpenWRT-Action OpenWRT-Action           
           git clone $([[ ${{ inputs.REPO_DEPTH }} != 'all' ]] && echo --depth ${{ inputs.REPO_DEPTH }} || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./OpenWRT-Action/openwrt
           cd ./OpenWRT-Action/openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)
+          cp -vr ../${{ inputs.REPO_TYPE }}/default-settings ./package/
           cd ../../
           tree -L 3
           
@@ -90,7 +90,7 @@ runs:
              echo '-files文件总览：'
              tree ./openwrt/files
              echo '-修改版本号'
-             sed -i "s|='R|='${{ inputs.COMPILE_CONFIG }}-$(date +%Y%m%d)-R|g" ./openwrt/package/lean/default-settings/files/zzz-default-settings 
+             sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)-|g" ./openwrt/package/default-settings/files/zzz-default-settings 
              cat ./openwrt/package/lean/default-settings/files/zzz-default-settings | grep DISTRIB_REVISION
              echo '-撤销默认开启wifi'
              sed -i '/\/etc\/config\/wireless/d' ./openwrt/package/lean/default-settings/files/zzz-default-settings
