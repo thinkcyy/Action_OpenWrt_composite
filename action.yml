@@ -56,7 +56,8 @@ runs:
           cd ./OpenWRT-Action/openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)
-          cp -vr ../${{ inputs.REPO_TYPE }}/default-settings ./package/
+          #默认设置
+          cp -vr ../${{ inputs.REPO_TYPE }}/thinkcy-default-settings ./package/
           cd ../../
           tree -L 3
           
