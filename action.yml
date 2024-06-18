@@ -90,7 +90,7 @@ runs:
              echo '-files文件总览：'
              tree ./openwrt/files
              echo '-修改版本号'
-             sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)-|g" ./openwrt/package/default-settings/files/zzz-default-settings 
+             sed -i "s|='R|='${{ inputs.COMPILE_CONFIG }}-$(date +%Y%m%d)-R|g" ./openwrt/package/lean/default-settings/files/zzz-default-settings 
              cat ./openwrt/package/lean/default-settings/files/zzz-default-settings | grep DISTRIB_REVISION
              echo '-撤销默认开启wifi'
              sed -i '/\/etc\/config\/wireless/d' ./openwrt/package/lean/default-settings/files/zzz-default-settings
