@@ -62,7 +62,7 @@ runs:
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)
           #默认设置
-          cp -vr ../${{ inputs.REPO_TYPE }}/thinkcy-default-settings ./package/
+          cp -pvr ../${{ inputs.REPO_TYPE }}/thinkcy-settings ./package/thinkcy
           cd ../../
           tree -L 3
           
