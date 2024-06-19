@@ -102,7 +102,8 @@ runs:
              echo '-files文件总览：'
              tree ./openwrt/files             
              echo '-修改版本号'
-             sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)-|g" ./openwrt/package/default-settings/files/zzz-default-settings 
+             sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+             sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
              cat ./openwrt/package/lean/default-settings/files/zzz-default-settings | grep DISTRIB_REVISION             
              echo '-向后调整tinc服务启动次序'             
              sed -i 's|START=42|START=99|g' ./openwrt/feeds/packages/net/tinc/files/tinc.init
