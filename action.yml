@@ -102,6 +102,8 @@ runs:
              cp -vr ../openwrt-config/${{ inputs.ROUTER_MODEL }}/common/files ./openwrt/
              echo "-正在复制${{ env.ROUTER_MODEL }}-${{ env.FILES_CONFIG }}"
              cp -vr ../openwrt-config/${{ inputs.ROUTER_MODEL }}/${{ inputs.FILES_CONFIG }}/files ./openwrt/
+             echo '-追加wg客户端'
+             cat ../openwrt-config/common/network-wg0-peers >> ./openwrt/files/etc/config/network
              echo '-处理文件权限'
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-up
              chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-down
