@@ -84,11 +84,11 @@ runs:
           
           echo '当前执行步骤：3-修改版本号'
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
-               sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.COMPILE_CONFIG }}-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-${{ inputs.COMPILE_CONFIG }}-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           else          
-               sed -i "s|REVISION_tobeupdated|${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|REVISION_tobeupdated|${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           fi
           
           echo '当前执行步骤：4-添加自定义配置files'
