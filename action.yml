@@ -102,9 +102,15 @@ runs:
              echo '-files文件总览：'
              tree ./openwrt/files             
              echo '-修改版本号'
-             sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-             sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-             cat ./openwrt/package/lean/default-settings/files/zzz-default-settings | grep DISTRIB_REVISION             
+             if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
+               sed -i "s|REVISION_tobeupdated|ImageBuilder-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+             else          
+               sed -i "s|REVISION_tobeupdated|${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+             fi 
+             cat ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DISTRIB_REVISION     
+             cat ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DESCRIPTION 
              echo '-向后调整tinc服务启动次序'             
              sed -i 's|START=42|START=99|g' ./openwrt/feeds/packages/net/tinc/files/tinc.init
              # 遇错退出
