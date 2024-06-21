@@ -82,7 +82,7 @@ runs:
           cat ./$REPO_TYPE/scripts/prepare.sh
           ./$REPO_TYPE/scripts/prepare.sh      
           
-          echo "custom_feeds.sh内容"
+          echo "feeds.conf.default内容"
           cat ./openwrt/feeds.conf.default
                    
           echo '当前执行步骤：3-修改版本号'
