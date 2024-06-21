@@ -75,8 +75,8 @@ runs:
           chmod +x ./$REPO_TYPE/scripts/*.sh
           cp -vr ./$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG }}.config ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
                     
-          echo "更新feeds链接"
-          sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ./${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh
+          #echo "更新feeds链接"
+          #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ./${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh
 
           echo "prepare.sh内容"
           cat ./$REPO_TYPE/scripts/prepare.sh
