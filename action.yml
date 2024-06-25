@@ -85,6 +85,8 @@ runs:
           cat ./openwrt/feeds.conf.default
                    
           echo '当前执行步骤：3-修改版本号'
+          #删除lean的默认设置
+          rm -rf ./openwrtpackage/lean/default-settings/
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
                sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
                sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
