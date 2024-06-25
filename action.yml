@@ -63,7 +63,7 @@ runs:
           COMMITHASH=$(git rev-parse --short HEAD)
           #默认设置
           mkdir -p ./package/thinkcy
-          cp -vr ../${{ inputs.REPO_TYPE }}/thinkcy-settings ./package/thinkcy
+          cp -vr ../thinkcy-settings ./package/thinkcy
           cd ../../
           tree -L 3
           
