@@ -1,14 +1,14 @@
-name: 'Action_OpenWrt_composite'
+name: 'Action_zhKong_composite'
 description: 'Action'
 inputs:
   ROUTER_MODEL:  
     description: 'MODEL'
     required: true
-    default: 'EA8500'
+    default: 'AX6'
   COMPILE_CONFIG: 
     description: 'CONFIG'
     required: true
-    default: 'EA8500-20240524-23.05-init'
+    default: 'COMPILE_CONFIG=AX6-20240501-full-NSS'
   IMAGEBUILDER: 
     description: 'IMAGEBUILDER'
     required: false
@@ -20,11 +20,11 @@ inputs:
   OP_REPO: 
     description: 
     required: false
-    default: 'thinkcyy/OpenWrt'    
+    default: 'AgustinLorenzo/openwrt'    
   REPO_BRANCH: 
     description: 
     required: false
-    default: 'master' 
+    default: 'main' 
   REPO_DEPTH: 
     description: 
     required: false
@@ -40,7 +40,7 @@ inputs:
   REPO_TYPE: 
     description: 
     required: false
-    default: 'OpenWRT'     
+    default: 'zhKong'     
 runs:
   using: "composite"
   steps:
@@ -56,7 +56,6 @@ runs:
           pwd          
           echo '当前执行步骤：1-下载OpenWrt仓库'
           git clone --depth 1  https://github.com/thinkcyy/OpenWRT-Action OpenWRT-Action 
-          #git clone --depth 1  https://github.com/coolsnowwolf/lede -b master --single-branch ./OpenWRT-Action/openwrt
           git clone $([[ ${{ inputs.REPO_COMMIT }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./OpenWRT-Action/openwrt
           cd ./OpenWRT-Action/openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
