@@ -60,6 +60,7 @@ runs:
           cd ./OpenWRT-Action/openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)
+          REV_BRANCH="$(git rev-parse --abbrev-ref HEAD)" 
           #默认设置
           mkdir -p ./package/thinkcy
           cp -vr ../thinkcy-settings ./package/thinkcy
@@ -76,9 +77,7 @@ runs:
                     
           #echo "更新feeds链接"
           #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ./${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh
-          COMMITHASH="4c73c34ec4215deb690bf03faea2a0fe725476f0"
-          git checkout ${COMMITHASH}
-          REV_BRANCH="$(git rev-parse --abbrev-ref HEAD)"           
+                    
           # Replace all src-git with src-git-full: https://openwrt.org/docs/guide-developer/feeds#feed_configuration
           sed -e "/^src-git\S*/s//src-git-full/" feeds.conf.default > feeds.conf           
           ./scripts/feeds update -a           
@@ -87,8 +86,8 @@ runs:
           | while read -r FEED_ID
           do
           REV_DATE="$(git log -1 --format=%cd --date=iso8601-strict)"
-          COMMITHASH="$(git -C feeds/${FEED_ID} rev-list -n 1 --before=${REV_DATE} ${REV_BRANCH})"
-          sed -i -e "/\s${FEED_ID}\s.*\.git$/s/$/^${COMMITHASH}/" feeds.conf
+          REV_HASH="$(git -C feeds/${FEED_ID} rev-list -n 1 --before=${REV_DATE} ${REV_BRANCH})"
+          sed -i -e "/\s${FEED_ID}\s.*\.git$/s/$/^${REV_HASH}/" feeds.conf
           done
 
           echo "prepare.sh内容"
@@ -97,6 +96,8 @@ runs:
           
           echo "feeds.conf.default内容"
           cat ./openwrt/feeds.conf.default
+          echo "feeds.conf内容"
+          cat ./openwrt/feeds.conf
                    
           echo '当前执行步骤：3-修改版本号'
           #删除lean的默认设置
