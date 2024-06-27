@@ -90,11 +90,14 @@ runs:
           echo '当前执行步骤：4-选择feeds日期'
           if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then            
             ../scripts/select_feed_commit.sh
+            echo "feeds.conf内容"
+            cat feeds.conf 
             cd ../
           fi
 
           echo '当前执行步骤：5-处理package源码'
-          ./$REPO_TYPE/scripts/custom_feeds.sh
+          cd ./openwrt
+          ../$REPO_TYPE/scripts/custom_feeds.sh
                              
           echo '当前执行步骤：6-修改版本号'
           #删除lean的默认设置
