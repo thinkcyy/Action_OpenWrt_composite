@@ -164,6 +164,7 @@ runs:
     - name: Organize files      
       shell: bash
       run: |                             
+          set +e
           echo '当前执行步骤：10-组织产出文件'          
           cd ./Action-root
           echo "targets产出文件："
@@ -192,6 +193,7 @@ runs:
 
           echo '-产出文件总览：'
           ls -hl 
+          set -e
           
     - name: Upload artifact
       uses: actions/upload-artifact@main
