@@ -80,6 +80,10 @@ runs:
 
           echo '当前执行步骤：3-添加feed源'
           ./$REPO_TYPE/scripts/add_feeds.sh
+          echo "feeds.conf.default内容"
+          cat ./openwrt/feeds.conf.default
+          echo "feeds.conf内容"
+          cat ./openwrt/feeds.conf          
                     
           #echo "更新feeds链接"
           #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ./${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh        
@@ -93,17 +97,8 @@ runs:
 
           echo '当前执行步骤：5-处理package源码'
           ./$REPO_TYPE/scripts/custom_feeds.sh
-          
-          echo "prepare.sh内容"
-          cat ./$REPO_TYPE/scripts/prepare.sh
-          ./$REPO_TYPE/scripts/prepare.sh      
-          
-          echo "feeds.conf.default内容"
-          cat ./openwrt/feeds.conf.default
-          echo "feeds.conf内容"
-          cat ./openwrt/feeds.conf
-                   
-          echo '当前执行步骤：3-修改版本号'
+                             
+          echo '当前执行步骤：6-修改版本号'
           #删除lean的默认设置
           rm -rf ./openwrtpackage/lean/default-settings/
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
@@ -115,7 +110,7 @@ runs:
           fi
           cat ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings
           
-          echo '当前执行步骤：4-添加自定义配置files'
+          echo '当前执行步骤：7-添加自定义配置files'
           if [ "${{ inputs.FILES_CONFIG }}" != 'public' ] ; then
              # 忽略错误
              set +e
@@ -147,7 +142,7 @@ runs:
              echo '-当前为public版本，跳过'
           fi                       
           
-          echo '当前执行步骤：5-编译'
+          echo '当前执行步骤：8-编译'
           cd ./openwrt
           echo '当前执行步骤：5.1-下载'
           make download -j$(nproc)
@@ -155,7 +150,7 @@ runs:
           IGNORE_ERRORS=1  make -j$(nproc) || make -j1 V=s
           # make V=s; while [ $(($?)) -ne 0 ]; do make V=s; done
           
-          echo '当前执行步骤：6-打标'
+          echo '当前执行步骤：9-打标'
           if [ "${{ inputs.FILES_CONFIG }}" != 'public' ] ; then
              tag_name=${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}
           else
@@ -170,18 +165,18 @@ runs:
     - name: Organize files      
       shell: bash
       run: |                             
-          echo '当前执行步骤：7-组织产出文件'          
+          echo '当前执行步骤：10-组织产出文件'          
           cd ./OpenWRT-Action
           echo "targets产出文件："
           tree  ./openwrt/bin/targets/
           rm -rf ./artifact/
           mkdir -p ./artifact/
 
-          echo '当前执行步骤：7.1-组织配置文件：'
+          echo '当前执行步骤：10.1-组织配置文件：'
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
           cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config
 
-          echo '当前执行步骤：7.2-组织bin文件：'
+          echo '当前执行步骤：10.2-组织bin文件：'
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
              # cp -vr ./openwrt/bin/ ./artifact/ 
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*imagebuilder*") ./artifact/             
@@ -208,7 +203,7 @@ runs:
     - name: Addtional bin for release      
       shell: bash
       run: |                             
-          echo '当前执行步骤：8-添加额外发布文件'    
+          echo '当前执行步骤：11-添加额外发布文件'    
           cd ./OpenWRT-Action
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sdk*") ./artifact/
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*toolchain*") ./artifact/
