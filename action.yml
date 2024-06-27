@@ -72,7 +72,7 @@ runs:
           cd ../
 
           # ImageBuilder
-          if [ `grep -c "CONFIG_IB=y" ./$REPO_TYPE/config/$COMPILE_CONFIG.config` -ne '0' ];then
+          if [ `grep -c "CONFIG_IB=y" ./${{ inputs.REPO_TYPE }}/config/${{ inputs.COMPILE_CONFIG }}.config` -ne '0' ] ; then
             echo "IMAGEBUILDER=y" >> $GITHUB_ENV
             echo "-已选择编译IMAGEBUILDER"
           if
@@ -97,7 +97,8 @@ runs:
           #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ../${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh        
                     
           echo '当前执行步骤：4-选择feeds日期'
-          if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then            
+          if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then   
+            echo "-已选择锁定feeds日期"
             ../scripts/select_feed_commit.sh
             echo "feeds.conf内容"
             cat feeds.conf             
@@ -195,11 +196,12 @@ runs:
              tag_name=Imagebuilder-${{ env.TAG_NAME }} 
              echo $tag_name
              echo "TAG_NAME=$tag_name" >> $GITHUB_ENV
-          else
-             cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/                                   
-             cd ./artifact/
-             rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
-          fi           
+          fi
+          
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/                                   
+          cd ./artifact/
+          rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
+                     
 
           echo '-产出文件总览：'
           ls -hl 
