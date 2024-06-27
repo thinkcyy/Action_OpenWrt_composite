@@ -81,6 +81,7 @@ runs:
           #echo "更新feeds链接"
           #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ./${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh        
                     
+          # 选择feeds日期
           if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then            
             cd ./openwrt
             ../scripts/select_feed_commit.sh
