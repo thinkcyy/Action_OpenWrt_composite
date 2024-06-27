@@ -95,8 +95,6 @@ runs:
             echo $REV_HASH
             sed -i -e "/\s${FEED_ID}\s.*\.git$/s/$/^${REV_HASH}/" feeds.conf
             cd ../
-          done
-          else
           fi
           
           
