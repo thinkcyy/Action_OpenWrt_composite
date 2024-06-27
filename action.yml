@@ -59,9 +59,9 @@ runs:
           echo "当前工作目录"
           pwd          
           echo '当前执行步骤：1-下载OpenWrt仓库'
-          git clone --depth 1  https://github.com/thinkcyy/OpenWRT-Action OpenWRT-Action 
-          git clone $([[ ${{ inputs.REPO_COMMIT }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./OpenWRT-Action/openwrt
-          cd ./OpenWRT-Action/openwrt
+          git clone --depth 1  https://github.com/thinkcyy/OpenWRT-Action Action-root 
+          git clone $([[ ${{ inputs.REPO_COMMIT }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./Action-root/openwrt
+          cd ./Action-root/openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)
           #REV_BRANCH="$(git rev-parse --abbrev-ref HEAD)" 
@@ -78,38 +78,37 @@ runs:
           chmod +x ./$REPO_TYPE/scripts/*.sh
           cp -vr ./$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG }}.config ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
 
-          echo '当前执行步骤：3-添加feed源'
-          cd ./openwrt          
+          cd ./openwrt 
+          
+          echo '当前执行步骤：3-添加feed源'                   
           ../$REPO_TYPE/scripts/add_feeds.sh
           echo "feeds.conf.default内容"
           cat feeds.conf.default        
                     
           #echo "更新feeds链接"
-          #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ./${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh        
+          #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ../${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh        
                     
           echo '当前执行步骤：4-选择feeds日期'
           if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then            
             ../scripts/select_feed_commit.sh
             echo "feeds.conf内容"
-            cat feeds.conf 
-            cd ../
+            cat feeds.conf             
           fi
 
-          echo '当前执行步骤：5-处理package源码'
-          cd ./openwrt
+          echo '当前执行步骤：5-处理package源码'          
           ../$REPO_TYPE/scripts/custom_feeds.sh
                              
           echo '当前执行步骤：6-修改版本号'
           #删除lean的默认设置
-          rm -rf ./openwrt/package/lean/default-settings/
+          rm -rf ./package/lean/default-settings/
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
-               sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           else          
-               sed -i "s|REVISION_tobeupdated|${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|REVISION_tobeupdated|${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           fi
-          cat ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings
+          cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings
           
           echo '当前执行步骤：7-添加自定义配置files'
           if [ "${{ inputs.FILES_CONFIG }}" != 'public' ] ; then
@@ -117,37 +116,36 @@ runs:
              set +e
              echo "files版本为${{ inputs.FILES_CONFIG }}"             
              echo "-正在复制common"
-             cp -vr ../openwrt-config/common/files ./openwrt/
+             cp -vr ../../openwrt-config/common/files ./
              echo "-正在复制common-${{ env.FILES_CONFIG }}"
-             cp -vr ../openwrt-config/common/${{ inputs.FILES_CONFIG }}/files ./openwrt/
+             cp -vr ../../openwrt-config/common/${{ inputs.FILES_CONFIG }}/files ./
              echo "-正在复制${{ env.ROUTER_MODEL }}-common"
-             cp -vr ../openwrt-config/${{ inputs.ROUTER_MODEL }}/common/files ./openwrt/
+             cp -vr ../../openwrt-config/${{ inputs.ROUTER_MODEL }}/common/files ./
              echo "-正在复制${{ env.ROUTER_MODEL }}-${{ env.FILES_CONFIG }}"
-             cp -vr ../openwrt-config/${{ inputs.ROUTER_MODEL }}/${{ inputs.FILES_CONFIG }}/files ./openwrt/
+             cp -vr ../../openwrt-config/${{ inputs.ROUTER_MODEL }}/${{ inputs.FILES_CONFIG }}/files ./
              echo '-追加wg客户端'
-             cat ../openwrt-config/common/network-wg0-peers >> ./openwrt/files/etc/config/network
+             cat ../openwrt-config/common/network-wg0-peers >> ./files/etc/config/network
              echo '-处理文件权限'
-             chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-up
-             chmod +x ./openwrt/files/etc/tinc/tincvpn/tinc-down
-             chmod 400 ./openwrt/files/etc/dropbear/authorized_keys
+             chmod +x ./files/etc/tinc/tincvpn/tinc-up
+             chmod +x ./files/etc/tinc/tincvpn/tinc-down
+             chmod 400 ./files/etc/dropbear/authorized_keys
              echo '-files文件总览：'
-             tree ./openwrt/files             
+             tree ./files             
 
-             cat ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DISTRIB_REVISION     
-             cat ./openwrt/package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DESCRIPTION 
+             cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DISTRIB_REVISION     
+             cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DESCRIPTION 
              echo '-向后调整tinc服务启动次序'             
-             sed -i 's|START=42|START=99|g' ./openwrt/feeds/packages/net/tinc/files/tinc.init
+             sed -i 's|START=42|START=99|g' ./feeds/packages/net/tinc/files/tinc.init
              # 遇错退出
              set -e
           else
              echo '-当前为public版本，跳过'
           fi                       
           
-          echo '当前执行步骤：8-编译'
-          cd ./openwrt
-          echo '当前执行步骤：5.1-下载'
+          echo '当前执行步骤：8-编译'          
+          echo '当前执行步骤：8.1-下载'
           make download -j$(nproc)
-          echo '当前执行步骤：5.2-编译'
+          echo '当前执行步骤：8.2-编译'
           IGNORE_ERRORS=1  make -j$(nproc) || make -j1 V=s
           # make V=s; while [ $(($?)) -ne 0 ]; do make V=s; done
           
@@ -167,7 +165,7 @@ runs:
       shell: bash
       run: |                             
           echo '当前执行步骤：10-组织产出文件'          
-          cd ./OpenWRT-Action
+          cd ./Action-root
           echo "targets产出文件："
           tree  ./openwrt/bin/targets/
           rm -rf ./artifact/
@@ -199,12 +197,12 @@ runs:
       uses: actions/upload-artifact@main
       with:
         name: ${{ inputs.REPO_TYPE }}-${{ env.TAG_NAME }}
-        path: ./OpenWRT-Action/artifact/
+        path: ./Action-root/artifact/
         
     - name: Addtional bin for release      
       shell: bash
       run: |                             
           echo '当前执行步骤：11-添加额外发布文件'    
-          cd ./OpenWRT-Action
+          cd ./Action-root
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sdk*") ./artifact/
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*toolchain*") ./artifact/
