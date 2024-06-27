@@ -69,25 +69,31 @@ runs:
           mkdir -p ./package/thinkcy
           cp -vr ../thinkcy-settings ./package/thinkcy
           cd ../
-          tree -L 3
+          #tree -L 3
           
-          echo '当前执行步骤：2-处理Package'
-          echo "当前工作目录"
-          pwd 
-          tree -L 3
+          echo '当前执行步骤：2-更新menuconfig文件'
+          #echo "当前工作目录"
+          #pwd 
+          #tree -L 3
           chmod +x ./$REPO_TYPE/scripts/*.sh
           cp -vr ./$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG }}.config ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+
+          echo '当前执行步骤：3-添加feed源'
+          ./$REPO_TYPE/scripts/add_feeds.sh
                     
           #echo "更新feeds链接"
           #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ./${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh        
                     
-          # 选择feeds日期
+          echo '当前执行步骤：4-选择feeds日期'
           if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then            
             cd ./openwrt
             ../scripts/select_feed_commit.sh
             cd ../
           fi
 
+          echo '当前执行步骤：5-处理package源码'
+          ./$REPO_TYPE/scripts/custom_feeds.sh
+          
           echo "prepare.sh内容"
           cat ./$REPO_TYPE/scripts/prepare.sh
           ./$REPO_TYPE/scripts/prepare.sh      
