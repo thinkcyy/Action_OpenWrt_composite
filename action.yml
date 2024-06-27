@@ -94,6 +94,7 @@ runs:
             REV_HASH=$(git -C feeds/${FEED_ID} rev-list -n 1 --all --before=${REV_DATE})
             echo $REV_HASH
             sed -i -e "/\s${FEED_ID}\s.*\.git$/s/$/^${REV_HASH}/" feeds.conf
+            done
             cd ../
           fi
           
