@@ -9,10 +9,10 @@ inputs:
     description: 'CONFIG'
     required: true
     default: 'COMPILE_CONFIG=AX6-20240501-full-NSS'
-  IMAGEBUILDER: 
-    description: 'IMAGEBUILDER'
-    required: false
-    default: 'n'
+#  IMAGEBUILDER: 
+#    description: 'IMAGEBUILDER'
+#    required: false
+#    default: 'n'
   FILES_CONFIG: 
     description: 
     required: false
@@ -55,6 +55,7 @@ runs:
         COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
         FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
         REPO_TYPE: ${{ inputs.REPO_TYPE }}
+        IMAGEBUILDER: n
       run:  |          
           echo "当前工作目录"
           pwd          
@@ -69,6 +70,13 @@ runs:
           mkdir -p ./package/thinkcy
           cp -vr ../thinkcy-settings ./package/thinkcy
           cd ../
+
+          # ImageBuilder
+          if [ `grep -c "CONFIG_IB=y" ./$REPO_TYPE/config/$COMPILE_CONFIG.config` -ne '0' ];then
+            echo "IMAGEBUILDER=y" >> $GITHUB_ENV
+            echo "-已选择编译IMAGEBUILDER"
+          if
+          
           #tree -L 3
           
           echo '当前执行步骤：2-更新menuconfig文件'
@@ -103,7 +111,7 @@ runs:
           echo '当前执行步骤：6-修改版本号'
           #删除lean的默认设置
           rm -rf ./package/lean/default-settings/
-          if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
+          if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then
                sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
                sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           else          
@@ -179,7 +187,7 @@ runs:
           cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config
 
           echo '当前执行步骤：10.2-组织bin文件：'
-          if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
+          if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then
              # cp -vr ./openwrt/bin/ ./artifact/ 
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*imagebuilder*") ./artifact/             
              cd ./artifact/
