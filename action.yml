@@ -41,6 +41,10 @@ inputs:
     description: 
     required: false
     default: 'zhKong'     
+  MATCH_FEED_HASH: 
+    description: 
+    required: false
+    default: 'n'
 runs:
   using: "composite"
   steps:
@@ -75,21 +79,26 @@ runs:
           cp -vr ./$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG }}.config ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
                     
           #echo "更新feeds链接"
-          #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ./${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh
-
-          cd ./openwrt
-          
-          echo "添加feeds日期"
-          sed -e "/^src-git\S*/s//src-git-full/" feeds.conf.default > feeds.conf           
-          ./scripts/feeds update -a                     
-          sed -n -e "/^src-git\S*\s/{s///;s/\s.*$//p}" feeds.conf | while read -r FEED_ID
-          do
-          REV_DATE="$(git log -1 --format=%cd --date=iso8601-strict)"
-          REV_HASH="$(git -C feeds/${FEED_ID} rev-list -n 1 --all --before=${REV_DATE}"
-          sed -i -e "/\s${FEED_ID}\s.*\.git$/s/$/^${REV_HASH}/" feeds.conf
+          #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ./${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh        
+                    
+          if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then
+            echo "选择feeds日期"          
+            cd ./openwrt
+            sed -i "/^\#/d" feeds.conf.default
+            sed -e "/^src-git\S*/s//src-git-full/" feeds.conf.default > feeds.conf          
+            ./scripts/feeds update -a
+            REV_DATE=$(git log -1 --format=%cd --date=iso8601-strict)
+            sed -e "/^src-git\S*\s/{s///;s/\s.*$//p}" feeds.conf  | while read -r FEED_ID
+            do               
+            REV_HASH=$(git -C feeds/${FEED_ID} rev-list -n 1 --all --before=${REV_DATE})
+            echo $REV_HASH
+            sed -i -e "/\s${FEED_ID}\s.*\.git$/s/$/^${REV_HASH}/" feeds.conf
+            cd ../
           done
+          else
+          fi
           
-          cd ../
+          
 
           echo "prepare.sh内容"
           cat ./$REPO_TYPE/scripts/prepare.sh
