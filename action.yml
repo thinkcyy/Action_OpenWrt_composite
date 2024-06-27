@@ -72,7 +72,7 @@ runs:
           cd ../
 
           echo '当前执行步骤：2-检查ImageBuilder' 
-          if [ "$(grep -c CONFIG_IB=y ./${{ inputs.REPO_TYPE }}/config/${{ inputs.COMPILE_CONFIG }}.config)" = "0" ] ; then
+          if [ "$(grep -c CONFIG_IB=y ./${{ inputs.REPO_TYPE }}/config/${{ inputs.COMPILE_CONFIG }}.config)" != "0" ] ; then
             echo "IMAGEBUILDER=y" >> $GITHUB_ENV
             echo "-已选择编译IMAGEBUILDER"
           if
