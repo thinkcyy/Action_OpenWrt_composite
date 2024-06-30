@@ -70,7 +70,7 @@ runs:
             if [  ${#ACTION_DATE} = '25' ] ; then
               git checkout $(git rev-list -n 1 --all --before=${{ inputs.ACTION_DATE }})       
             else
-              git checkout ${{ inputs.ACTION_DATE }})
+              git checkout ${{ inputs.ACTION_DATE }}
             fi
             cd  ..
           fi          
