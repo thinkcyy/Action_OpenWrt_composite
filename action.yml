@@ -60,13 +60,18 @@ runs:
         FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
         REPO_TYPE: ${{ inputs.REPO_TYPE }}
         IMAGEBUILDER: n
+        ACTION_DATE: ${{ inputs.ACTION_DATE }}
       run:  |                    
           echo '当前执行步骤：1-下载Action仓库'
           git clone $([[ ${{ inputs.ACTION_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/thinkcyy/OpenWRT-Action runner_root 
           if [ "${{ inputs.ACTION_DATE }}" != 'latest' ] ; then   
             echo "-已选择锁定Action仓库日期"
-            cd runner_root
-            git checkout $(git rev-list -n 1 --all --before=${{ inputs.ACTION_DATE }})       
+            cd runner_root            
+            if [  ${#ACTION_DATE} = '25' ] ; then
+              git checkout $(git rev-list -n 1 --all --before=${{ inputs.ACTION_DATE }})       
+            else
+              git checkout ${{ inputs.ACTION_DATE }})
+            fi
             cd  ..
           fi          
 
