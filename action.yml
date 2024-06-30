@@ -103,7 +103,9 @@ runs:
 
           cd ./openwrt 
           
-          echo '当前执行步骤：5-添加feed源'                   
+          echo '当前执行步骤：5-添加feed源'  
+          echo '-步骤：替换自带的feed源'
+          cp ../$REPO_TYPE/scripts/feeds.conf.default ./
           ../$REPO_TYPE/scripts/add_feeds.sh
           echo "feeds.conf.default内容"
           cat feeds.conf.default        
