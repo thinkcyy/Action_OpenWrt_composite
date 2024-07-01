@@ -108,7 +108,7 @@ runs:
           cd ./openwrt 
           
           echo '当前执行步骤：5-添加feed源'  
-          $([[ ${{ inputs.CUSTOM_FEEDS }} != 'no' ]] && echo '-已选择替换自带feeds源' || echo )          
+          $([[ ${{ inputs.CUSTOM_FEEDS }} != 'no' ]] && echo 'echo -已选择替换自带feeds源"' || echo )          
           cp ../$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS }} ./feeds.conf.default
           ../$REPO_TYPE/scripts/add_feeds.sh
           echo "feeds.conf.default内容"
