@@ -138,11 +138,13 @@ runs:
             echo "${{ inputs.CUSTOM_FEEDS_SH }}内容"
             cat ../$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS_SH }}.sh
             ../$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS_SH }}.sh
+          else 
+            echo '默认custom_feeds.sh内容'
+            cat ../$REPO_TYPE/scripts/custom_feeds.sh          
+            ../$REPO_TYPE/scripts/custom_feeds.sh            
           fi
 
-          echo '默认custom_feeds.sh内容'
-          cat ../$REPO_TYPE/scripts/custom_feeds.sh          
-          ../$REPO_TYPE/scripts/custom_feeds.sh
+
                              
           echo '当前执行步骤：8-修改版本号'
           #删除lean的默认设置
