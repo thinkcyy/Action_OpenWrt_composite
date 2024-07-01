@@ -137,7 +137,7 @@ runs:
             echo "-已选择${{ inputs.CUSTOM_FEEDS_SH }}"
             echo "${{ inputs.CUSTOM_FEEDS_SH }}内容"
             cat ../$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS_SH }}.sh
-            ./$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS_SH }}.sh
+            ../$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS_SH }}.sh
           fi
 
           echo '默认custom_feeds.sh内容'
