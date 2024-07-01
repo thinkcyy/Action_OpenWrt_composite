@@ -90,6 +90,7 @@ runs:
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)
           #REV_BRANCH="$(git rev-parse --abbrev-ref HEAD)" 
+          ./scripts/feeds update -a
           #默认设置
           mkdir -p ./package/thinkcy
           cp -vr ../thinkcy-settings ./package/thinkcy
