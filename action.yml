@@ -90,7 +90,7 @@ runs:
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)
           #REV_BRANCH="$(git rev-parse --abbrev-ref HEAD)" 
-          ./scripts/feeds update -a
+          
           #默认设置
           mkdir -p ./package/thinkcy
           cp -vr ../thinkcy-settings ./package/thinkcy
@@ -121,6 +121,7 @@ runs:
           ../$REPO_TYPE/scripts/add_feeds.sh
           echo "feeds.conf.default内容"
           cat feeds.conf.default
+          ./scripts/feeds update -a
                     
           #echo "更新feeds链接"
           #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ../${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh        
