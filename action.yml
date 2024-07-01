@@ -72,6 +72,7 @@ runs:
       run:  |                    
           echo '当前执行步骤：1-下载Action仓库'
           git clone $([[ ${{ inputs.ACTION_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/thinkcyy/OpenWRT-Action runner_root 
+          chmod +x ./runner_root/$REPO_TYPE/scripts/*.sh
           if [ "${{ inputs.ACTION_DATE }}" != 'latest' ] ; then   
             echo "-已选择锁定Action仓库日期"
             cd runner_root            
