@@ -53,6 +53,10 @@ inputs:
     description: 
     required: false
     default: 'n' 
+  CUSTOM_FEEDS_SH: 
+    description: 
+    required: false
+    default: 'n' 
 runs:
   using: "composite"
   steps:
@@ -119,7 +123,7 @@ runs:
           #echo "更新feeds链接"
           #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ../${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh        
                     
-          echo '当前执行步骤：6-选择feeds日期'
+          echo '当前执行步骤：7-处理package源码'
           if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then   
             echo "-已选择锁定feeds日期"
             ../scripts/select_feed_commit.sh
@@ -127,9 +131,16 @@ runs:
             cat feeds.conf             
           fi
              
-          echo 'custom_feeds.sh内容'
-          cat ../$REPO_TYPE/scripts/custom_feeds.sh
-          echo '当前执行步骤：7-处理package源码'
+          echo '当前执行步骤：6-执行custom_feeds.sh'
+          if [ "${{ inputs.CUSTOM_FEEDS_SH }}" != 'n' ] ; then   
+            echo "-已选择${{ inputs.CUSTOM_FEEDS_SH }}"
+            echo "${{ inputs.CUSTOM_FEEDS_SH }}内容"
+            cat ../$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS_SH }}.sh
+            ./$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS_SH }}.sh
+          fi
+
+          echo '默认custom_feeds.sh内容'
+          cat ../$REPO_TYPE/scripts/custom_feeds.sh          
           ../$REPO_TYPE/scripts/custom_feeds.sh
                              
           echo '当前执行步骤：8-修改版本号'
