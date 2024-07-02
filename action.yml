@@ -88,7 +88,7 @@ runs:
           fi          
 
           echo '当前执行步骤：2-下载OpenWrt源码仓库'
-          git clone $([[ ${{ inputs.REPO_COMMIT }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./runner_root/openwrt
+          git clone $([[ ${{ inputs.REPO_COMMIT }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./openwrt
           cd openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)
