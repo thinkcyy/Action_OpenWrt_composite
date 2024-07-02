@@ -57,6 +57,10 @@ inputs:
     description: 
     required: false
     default: 'n' 
+  FEEDS_DATE: 
+    description: 
+    required: false
+    default: 'latest'  
 runs:
   using: "composite"
   steps:
@@ -120,21 +124,20 @@ runs:
           fi          
           ../$REPO_TYPE/scripts/add_feeds.sh
           echo "feeds.conf.default内容"
-          cat feeds.conf.default
-          
-                    
-          #echo "更新feeds链接"
-          #sed -i  '1i sed -i "s/\\^.*$/ /g" feeds.conf.default' ../${{ inputs.REPO_TYPE }}/scripts/custom_feeds.sh        
+          cat feeds.conf.default                 
                     
           echo '当前执行步骤：6-调整feeds源'
           if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then   
-            echo "-已选择锁定feeds日期"
+            echo "-已选择根据源码日期锁定feeds日期"
             ../scripts/select_feed_commit.sh
             echo "feeds.conf内容"
-            cat feeds.conf             
+            cat feeds.conf
+          else
+            if [ "${{ inputs.FEEDS_DATE }}" != 'latest' ] ; then   
+                echo "-已选择单独锁定feeds日期"
+                ../scripts/select_feed_commit.sh ${{ inputs.FEEDS_DATE }}
           fi
-          #./scripts/feeds update -a
-             
+                      
           echo '当前执行步骤：7-执行custom_feeds.sh'
           if [ "${{ inputs.CUSTOM_FEEDS_SH }}" != 'n' ] ; then   
             echo "-已选择${{ inputs.CUSTOM_FEEDS_SH }}"
