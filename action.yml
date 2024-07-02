@@ -77,32 +77,26 @@ runs:
           echo '当前执行步骤：1-下载Action仓库'
           git clone $([[ ${{ inputs.ACTION_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/thinkcyy/OpenWRT-Action runner_root 
           chmod +x ./runner_root/$REPO_TYPE/scripts/*.sh
+          cd runner_root
           if [ "${{ inputs.ACTION_DATE }}" != 'latest' ] ; then   
-            echo "-已选择锁定Action仓库日期"
-            cd runner_root            
+            echo "-已选择锁定Action仓库日期"                        
             if [  ${#ACTION_DATE} = '25' ] ; then
               git checkout $(git rev-list -n 1 --all --before=${{ inputs.ACTION_DATE }})       
             else
               git checkout ${{ inputs.ACTION_DATE }}
-            fi
-            cd  ..
+            fi            
           fi          
 
           echo '当前执行步骤：2-下载OpenWrt源码仓库'
           git clone $([[ ${{ inputs.REPO_COMMIT }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./runner_root/openwrt
-          cd ./runner_root/openwrt
+          cd openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)
           #REV_BRANCH="$(git rev-parse --abbrev-ref HEAD)" 
           
           #默认设置
           mkdir -p ./package/thinkcy
-          cp -vr ../thinkcy-settings ./package/thinkcy
-          cd ../
-
-          
-          
-          #tree -L 3
+          cp -vr ../thinkcy-settings ./package/thinkcy       
           
           echo '当前执行步骤：3-更新menuconfig文件'          
           chmod +x ./$REPO_TYPE/scripts/*.sh
@@ -112,15 +106,15 @@ runs:
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
               echo "-已选择编译IMAGEBUILDER"
               echo "IMAGEBUILDER=y" >> $GITHUB_ENV
-              sed -i '/CONFIG_IB/d' config-${{ inputs.ROUTER_MODEL }}.config
-              sed -i '/CONFIG_SDK/d' config-${{ inputs.ROUTER_MODEL }}.config
-              sed -i '/CONFIG_MAKE_TOOLCHAIN/d' config-${{ inputs.ROUTER_MODEL }}.config
-              sed -i '/ALL_KMODS/d' config-${{ inputs.ROUTER_MODEL }}.config
-              echo CONFIG_IB=y >> config-${{ inputs.ROUTER_MODEL }}.config
-              echo CONFIG_SDK=y >> config-${{ inputs.ROUTER_MODEL }}.config
-              echo CONFIG_MAKE_TOOLCHAIN=y >> config-${{ inputs.ROUTER_MODEL }}.config
-              echo ALL_KMODS=y >> config-${{ inputs.ROUTER_MODEL }}.config
-          fi
+              sed -i '/CONFIG_IB/d' ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              sed -i '/CONFIG_SDK/d' ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              sed -i '/CONFIG_MAKE_TOOLCHAIN/d' ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              sed -i '/ALL_KMODS/d' ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              echo CONFIG_IB=y >> ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              echo CONFIG_SDK=y >> ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              echo CONFIG_MAKE_TOOLCHAIN=y >> ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              echo ALL_KMODS=y >> ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+          fi          
           
           echo '当前执行步骤：5-添加feed源'  
           if [ "${{ inputs.CUSTOM_FEEDS }}" != 'n' ] ; then
