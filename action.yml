@@ -99,21 +99,21 @@ runs:
           cp -vr ../thinkcy-settings ./package/thinkcy       
           
           echo '当前执行步骤：3-更新menuconfig文件'          
-          chmod +x ./$REPO_TYPE/scripts/*.sh
-          cp -vr ./$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG }}.config ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+          chmod +x ../$REPO_TYPE/scripts/*.sh
+          cp -vr ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG }}.config ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
           
           echo '当前执行步骤：4-检查ImageBuilder'    
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
               echo "-已选择编译IMAGEBUILDER"
               echo "IMAGEBUILDER=y" >> $GITHUB_ENV
-              sed -i '/CONFIG_IB/d' ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              sed -i '/CONFIG_SDK/d' ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              sed -i '/CONFIG_MAKE_TOOLCHAIN/d' ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              sed -i '/ALL_KMODS/d' ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              echo CONFIG_IB=y >> ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              echo CONFIG_SDK=y >> ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              echo CONFIG_MAKE_TOOLCHAIN=y >> ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              echo ALL_KMODS=y >> ./$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              sed -i '/CONFIG_IB/d' ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              sed -i '/CONFIG_SDK/d' ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              sed -i '/CONFIG_MAKE_TOOLCHAIN/d' ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              sed -i '/ALL_KMODS/d' ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              echo CONFIG_IB=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              echo CONFIG_SDK=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              echo CONFIG_MAKE_TOOLCHAIN=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              echo ALL_KMODS=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
           fi          
           
           echo '当前执行步骤：5-添加feed源'  
