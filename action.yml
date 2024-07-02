@@ -136,6 +136,7 @@ runs:
             if [ "${{ inputs.FEEDS_DATE }}" != 'latest' ] ; then   
                 echo "-已选择单独锁定feeds日期"
                 ../scripts/select_feed_commit.sh ${{ inputs.FEEDS_DATE }}
+            fi   
           fi
                       
           echo '当前执行步骤：7-执行custom_feeds.sh'
