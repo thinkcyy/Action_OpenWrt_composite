@@ -133,7 +133,7 @@ runs:
             echo "feeds.conf内容"
             cat feeds.conf             
           fi
-          ./scripts/feeds update -a
+          #./scripts/feeds update -a
              
           echo '当前执行步骤：7-执行custom_feeds.sh'
           if [ "${{ inputs.CUSTOM_FEEDS_SH }}" != 'n' ] ; then   
@@ -146,8 +146,6 @@ runs:
             cat ../$REPO_TYPE/scripts/custom_feeds.sh          
             ../$REPO_TYPE/scripts/custom_feeds.sh            
           fi
-
-
                              
           echo '当前执行步骤：8-修改版本号'
           #删除lean的默认设置
@@ -261,4 +259,3 @@ runs:
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sdk*") ./artifact/
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*toolchain*") ./artifact/
           fi
-          
