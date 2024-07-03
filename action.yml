@@ -77,6 +77,7 @@ runs:
         REPO_TYPE: ${{ inputs.REPO_TYPE }}
         IMAGEBUILDER: n
         ACTION_DATE: ${{ inputs.ACTION_DATE }}
+        FEEDS_DATE: ${{ inputs.FEEDS_DATE }}
       run:  |                    
           echo '当前执行步骤：1-下载Action仓库'
           git clone $([[ ${{ inputs.ACTION_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/thinkcyy/OpenWRT-Action runner_root           
