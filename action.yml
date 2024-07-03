@@ -49,7 +49,7 @@ inputs:
     description: 
     required: false
     default: 'latest'    
-  CUSTOM_FEEDS: 
+  DEFAULT_FEEDS: 
     description: 
     required: false
     default: 'n' 
@@ -61,6 +61,10 @@ inputs:
     description: 
     required: false
     default: 'latest'  
+  EXTRA_FEEDS: 
+    description: 
+    required: false
+    default: 'n'
 runs:
   using: "composite"
   steps:
@@ -117,12 +121,14 @@ runs:
           fi          
           
           echo '当前执行步骤：5-调整默认feed源'  
-          if [ "${{ inputs.CUSTOM_FEEDS }}" != 'n' ] ; then
-            cp ../$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS }} ./feeds.conf.default
+          if [ "${{ inputs.DEFAULT_FEEDS }}" != 'n' ] ; then
+            cp ../$REPO_TYPE/scripts/${{ inputs.DEFAULT_FEEDS }} ./feeds.conf.default
             echo "-已选择替换自带feeds源"
           fi          
           echo "-添加额外feeds源"
-          ../$REPO_TYPE/scripts/add_feeds.sh
+          if [ "${{ inputs.EXTRA_FEEDS }}" != 'n' ] ; then
+            ../$REPO_TYPE/scripts/${{ inputs.EXTRA_FEEDS }}.sh
+          fi
           echo "-删除未启用feeds源"
           sed -i '/^#/d' ./feeds.conf.default
           sed -i '/#/d' ./feeds.conf.default
@@ -147,8 +153,6 @@ runs:
           cat feeds.conf
                       
           echo '当前执行步骤：7-执行custom_feeds.sh'
-          echo "-feeds.conf内容"
-          cat feeds.conf
           if [ "${{ inputs.CUSTOM_FEEDS_SH }}" != 'n' ] ; then   
             echo "-已选择${{ inputs.CUSTOM_FEEDS_SH }}"
             echo "${{ inputs.CUSTOM_FEEDS_SH }}内容"
