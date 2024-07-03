@@ -127,7 +127,7 @@ runs:
           sed -i '/^#/d' ./feeds.conf.default
           sed -i '/#/d' ./feeds.conf.default
           
-          echo "feeds.conf.default内容"
+          echo "-feeds.conf.default内容"
           cat feeds.conf.default                 
                     
           echo '当前执行步骤：6-生成feeds.conf'
@@ -139,9 +139,12 @@ runs:
                 echo "-已选择单独锁定feeds日期"
                 ../scripts/select_feed_commit.sh ${{ inputs.FEEDS_DATE }}
             else
-                
+                cp ./feeds.conf.default ./feeds.conf
             fi   
           fi
+          
+          echo "-feeds.conf内容"
+          cat feeds.conf
                       
           echo '当前执行步骤：7-执行custom_feeds.sh'
           echo "-feeds.conf内容"
