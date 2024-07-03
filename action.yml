@@ -116,29 +116,36 @@ runs:
               echo ALL_KMODS=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
           fi          
           
-          echo '当前执行步骤：5-添加feed源'  
+          echo '当前执行步骤：5-调整默认feed源'  
           if [ "${{ inputs.CUSTOM_FEEDS }}" != 'n' ] ; then
             cp ../$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS }} ./feeds.conf.default
             echo "-已选择替换自带feeds源"
           fi          
+          echo "-添加额外feeds源"
           ../$REPO_TYPE/scripts/add_feeds.sh
+          echo "-删除未启用feeds源"
+          sed -i '/^#/d' ./feeds.conf.default
+          sed -i '/#/d' ./feeds.conf.default
+          
           echo "feeds.conf.default内容"
           cat feeds.conf.default                 
                     
-          echo '当前执行步骤：6-调整feeds源'
+          echo '当前执行步骤：6-生成feeds.conf'
           if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then   
             echo "-已选择根据源码日期锁定feeds日期"
             ../scripts/select_feed_commit.sh
-            echo "feeds.conf内容"
-            cat feeds.conf
           else
             if [ "${{ inputs.FEEDS_DATE }}" != 'latest' ] ; then   
                 echo "-已选择单独锁定feeds日期"
                 ../scripts/select_feed_commit.sh ${{ inputs.FEEDS_DATE }}
+            else
+                
             fi   
           fi
                       
           echo '当前执行步骤：7-执行custom_feeds.sh'
+          echo "-feeds.conf内容"
+          cat feeds.conf
           if [ "${{ inputs.CUSTOM_FEEDS_SH }}" != 'n' ] ; then   
             echo "-已选择${{ inputs.CUSTOM_FEEDS_SH }}"
             echo "${{ inputs.CUSTOM_FEEDS_SH }}内容"
