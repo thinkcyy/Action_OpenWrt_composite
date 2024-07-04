@@ -191,9 +191,13 @@ runs:
              echo "-正在复制${{ env.ROUTER_MODEL }}-common"
              cp -vr ../../openwrt-config/${{ inputs.ROUTER_MODEL }}/common/files ./
              echo "-正在复制${{ env.ROUTER_MODEL }}-${{ env.FILES_CONFIG }}"
-             cp -vr ../../openwrt-config/${{ inputs.ROUTER_MODEL }}/${{ inputs.FILES_CONFIG }}/files ./
+             cp -vr ../../openwrt-config/${{ inputs.ROUTER_MODEL }}/${{ inputs.FILES_CONFIG }}/files ./             
              echo '-追加wg客户端'
-             cat ../openwrt-config/common/network-wg0-peers >> ./files/etc/config/network
+             cat ../../openwrt-config//common/network-wg0-peers >> ./files/etc/config/network
+             echo '-追dhcp客户端'
+             sed -i "s|subnet|192.168.${FILES_CONFIG}|g" ../../openwrt-config/common/dhcp-host
+             cat ../../openwrt-config/common/dhcp-host >> ./files/etc/config/dhcp
+             
              echo '-处理文件权限'
              chmod +x ./files/etc/tinc/tincvpn/tinc-up
              chmod +x ./files/etc/tinc/tincvpn/tinc-down
