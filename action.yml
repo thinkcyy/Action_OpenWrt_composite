@@ -80,6 +80,7 @@ runs:
         FEEDS_DATE: ${{ inputs.FEEDS_DATE }}
       run:  |                    
           echo '当前执行步骤：1-下载Action仓库'
+          
           git clone $([[ ${{ inputs.ACTION_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/thinkcyy/OpenWRT-Action runner_root           
           cd runner_root
           if [ "${{ inputs.ACTION_DATE }}" != 'latest' ] ; then   
@@ -92,6 +93,7 @@ runs:
           fi          
 
           echo '当前执行步骤：2-下载OpenWrt源码仓库'
+          echo "https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} "
           git clone $([[ ${{ inputs.REPO_COMMIT }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./openwrt
           cd openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
