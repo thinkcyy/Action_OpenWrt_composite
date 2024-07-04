@@ -267,7 +267,7 @@ runs:
     - name: Upload artifact
       uses: actions/upload-artifact@main
       with:
-        name: ${{ inputs.REPO_TYPE }}-${{ env.TAG_NAME }}
+        name: ${{ inputs.REPO_TYPE }}-${{ inputs.OP_REPO }}-${{ env.TAG_NAME }}
         path: ./runner_root/artifact/
         
     - name: Addtional bin for release      
