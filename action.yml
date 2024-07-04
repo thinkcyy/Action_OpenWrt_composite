@@ -226,7 +226,7 @@ runs:
           fi
           
           
-          tag_name=$tag_name-$(echo ${{ inputs.OP_REPO } | sed 's|\/|.|').${{ inputs.REPO_BRANCH }}.$COMMITHASH-$(date +%Y%m%d-%H%M)
+          tag_name=$tag_name-$(echo ${{ inputs.OP_REPO }} | sed 's|\/|.|').${{ inputs.REPO_BRANCH }}.$COMMITHASH-$(date +%Y%m%d-%H%M)
           
           echo $tag_name
           echo "TAG_NAME=$tag_name" >> $GITHUB_ENV  
