@@ -98,6 +98,7 @@ runs:
           cd openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)
+          echo $COMMITHASH
           #REV_BRANCH="$(git rev-parse --abbrev-ref HEAD)" 
           
           #默认设置
