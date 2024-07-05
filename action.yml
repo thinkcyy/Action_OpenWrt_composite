@@ -78,9 +78,25 @@ runs:
         IMAGEBUILDER: n
         ACTION_DATE: ${{ inputs.ACTION_DATE }}
         FEEDS_DATE: ${{ inputs.FEEDS_DATE }}
-      run:  |                    
-          echo '当前执行步骤：1-下载Action仓库'
+      run:  |
+          echo "ROUTER_MODEL=${{ inputs.ROUTER_MODEL }}" >> $GITHUB_ENV
+          echo "COMPILE_CONFIG=${{ inputs.COMPILE_CONFIG }}" >> $GITHUB_ENV
+          echo "IMAGEBUILDER=${{ inputs.IMAGEBUILDER }}" >> $GITHUB_ENV
+          echo "FILES_CONFIG=${{ inputs.FILES_CONFIG }}" >> $GITHUB_ENV
+          echo "OP_REPO=${{ inputs.OP_REPO }}" >> $GITHUB_ENV
+          echo "REPO_BRANCH=${{ inputs.REPO_BRANCH }}" >> $GITHUB_ENV
+          echo "REPO_DEPTH=${{ inputs.REPO_DEPTH }}" >> $GITHUB_ENV
+          echo "REPO_COMMIT=${{ inputs.REPO_COMMIT }}" >> $GITHUB_ENV
+          echo "REPO_TAG=${{ inputs.REPO_TAG }}" >> $GITHUB_ENV
+          echo "REPO_TYPE=${{ inputs.REPO_TYPE }}" >> $GITHUB_ENV
+          echo "MATCH_FEED_HASH=${{ inputs.MATCH_FEED_HASH }}" >> $GITHUB_ENV
+          echo "ACTION_DATE=${{ inputs.ACTION_DATE }}" >> $GITHUB_ENV
+          echo "DEFAULT_FEEDS=${{ inputs.DEFAULT_FEEDS }}" >> $GITHUB_ENV
+          echo "CUSTOM_FEEDS_SH=${{ inputs.CUSTOM_FEEDS_SH }}" >> $GITHUB_ENV
+          echo "FEEDS_DATE=${{ inputs.FEEDS_DATE }}" >> $GITHUB_ENV
+          echo "EXTRA_FEEDS=${{ inputs.EXTRA_FEEDS }}" >> $GITHUB_ENV
           
+          echo '当前执行步骤：1-下载Action仓库'          
           git clone $([[ ${{ inputs.ACTION_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/thinkcyy/OpenWRT-Action runner_root           
           cd runner_root
           if [ "${{ inputs.ACTION_DATE }}" != 'latest' ] ; then   
