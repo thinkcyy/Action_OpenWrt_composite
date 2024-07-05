@@ -251,6 +251,10 @@ runs:
           cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config
 
           echo '当前执行步骤：12.2-组织bin文件：'
+          
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
+          rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
+          
           if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then
              # cp -vr ./openwrt/bin/ ./artifact/ 
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*imagebuilder*") ./artifact/             
@@ -261,9 +265,7 @@ runs:
              echo "TAG_NAME=$tag_name" >> $GITHUB_ENV
           fi
           
-          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/                                   
-          cd ./artifact/
-          rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *                     
+                               
 
           echo '-产出文件总览：'
           ls -hl 
