@@ -148,7 +148,7 @@ runs:
               echo CONFIG_IB_STANDALONE=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
               echo CONFIG_SDK=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
               echo CONFIG_MAKE_TOOLCHAIN=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              echo ALL_KMODS=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              echo CONFIG_ALL_KMODS=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
           fi          
           
           echo '当前执行步骤：5-调整默认feed源'  
