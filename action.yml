@@ -75,7 +75,7 @@ runs:
         COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
         FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
         REPO_TYPE: ${{ inputs.REPO_TYPE }}
-        REPO_DATE: ${{ REPO_DATEE }}
+        REPO_DATE: ${{ REPO_DATE }}
         IMAGEBUILDER: n
         ACTION_DATE: ${{ inputs.ACTION_DATE }}
         FEEDS_DATE: ${{ inputs.FEEDS_DATE }}
