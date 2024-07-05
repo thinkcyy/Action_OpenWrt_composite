@@ -11,7 +11,9 @@ runs:
   steps:
                    
     - name: Organize files         
-    working-directory: ${{ github.workspace }}/runner_root/openwrt
+      working-directory: ${{ github.workspace }}/runner_root/openwrt
+      shell: bash
+      run: |      
           echo '当前执行步骤：11-打标'
           if [ "${{ env.FILES_CONFIG }}" != 'public' ] ; then
              tag_name=${{ env.COMPILE_CONFIG }}-${{ env.FILES_CONFIG }}
