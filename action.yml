@@ -29,7 +29,7 @@ inputs:
     description: 
     required: false
     default: 'all'
-  REPO_COMMIT: 
+  REPO_DATE: 
     description: 
     required: false
     default: 'latest' 
@@ -75,6 +75,7 @@ runs:
         COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
         FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
         REPO_TYPE: ${{ inputs.REPO_TYPE }}
+        REPO_DATE: ${{ REPO_DATEE }}
         IMAGEBUILDER: n
         ACTION_DATE: ${{ inputs.ACTION_DATE }}
         FEEDS_DATE: ${{ inputs.FEEDS_DATE }}
@@ -86,7 +87,7 @@ runs:
           echo "OP_REPO=${{ inputs.OP_REPO }}" >> $GITHUB_ENV
           echo "REPO_BRANCH=${{ inputs.REPO_BRANCH }}" >> $GITHUB_ENV
           echo "REPO_DEPTH=${{ inputs.REPO_DEPTH }}" >> $GITHUB_ENV
-          echo "REPO_COMMIT=${{ inputs.REPO_COMMIT }}" >> $GITHUB_ENV
+          echo "REPO_DATE=${{ inputs.REPO_DATE }}" >> $GITHUB_ENV
           echo "REPO_TAG=${{ inputs.REPO_TAG }}" >> $GITHUB_ENV
           echo "REPO_TYPE=${{ inputs.REPO_TYPE }}" >> $GITHUB_ENV
           echo "MATCH_FEED_HASH=${{ inputs.MATCH_FEED_HASH }}" >> $GITHUB_ENV
@@ -110,12 +111,21 @@ runs:
 
           echo '当前执行步骤：2-下载OpenWrt源码仓库'
           echo "https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} "
-          git clone $([[ ${{ inputs.REPO_COMMIT }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./openwrt
+          git clone $([[ ${{ inputs.REPO_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./openwrt
+          
           cd openwrt
-          $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
+
+          if [ "${{ inputs.REPO_DATE }}" != 'latest' ] ; then   
+            echo "-已选择锁定OpenWrt源码仓库日期"                        
+            if [  ${#REPO_DATE} = '25' ] ; then
+              git checkout $(git rev-list -n 1 --all --before=${{ inputs.REPO_DATE }})       
+            else
+              git checkout ${{ inputs.REPO_DATE }}
+            fi            
+          fi 
+          
           COMMITHASH=$(git rev-parse --short HEAD)
-          echo "COMMITHASH=$COMMITHASH" >> $GITHUB_ENV
-          #REV_BRANCH="$(git rev-parse --abbrev-ref HEAD)" 
+          echo "COMMITHASH=$COMMITHASH" >> $GITHUB_ENV 
           
           #默认设置
           mkdir -p ./package/thinkcy
