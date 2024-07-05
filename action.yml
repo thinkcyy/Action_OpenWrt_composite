@@ -148,12 +148,13 @@ runs:
           if [ "${{ inputs.EXTRA_FEEDS }}" != 'n' ] ; then
             ../$REPO_TYPE/scripts/${{ inputs.EXTRA_FEEDS }}.sh
           fi
+          
+          echo "-feeds.conf.default内容"
+          cat feeds.conf.default  
+          
           echo "-删除未启用feeds源"
           sed -i '/^#/d' ./feeds.conf.default
           sed -i '/#/d' ./feeds.conf.default
-          
-          echo "-feeds.conf.default内容"
-          cat feeds.conf.default                 
                     
           echo '当前执行步骤：6-生成feeds.conf'
           if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then   
