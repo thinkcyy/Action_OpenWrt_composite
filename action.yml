@@ -77,13 +77,3 @@ runs:
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*toolchain*") ./artifact/
           fi
            
-    - name: Create release
-      id: create_release
-      uses: ncipollo/release-action@main
-      with:
-        name: OpenWrt-zhKong-main_nss-${{ env.TAG_NAME }}
-        allowUpdates: true
-        tag: ${{ env.TAG_NAME }}
-        replacesArtifacts: true
-        token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: ./runner_root/artifact/*           
