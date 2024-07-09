@@ -118,7 +118,7 @@ runs:
           if [ "${{ inputs.REPO_DATE }}" != 'latest' ] ; then   
             echo "-已选择锁定OpenWrt源码仓库日期"                        
             if [  ${#REPO_DATE} = '25' ] ; then
-              git checkout $(git rev-list -n 1 --before=${{ inputs.REPO_DATE }} ${{ inputs.REPO_BRANCH }})       
+              git checkout $(git rev-list -n 1 --date=rfc --before=${{ inputs.REPO_DATE }} ${{ inputs.REPO_BRANCH }})       
             else
               git checkout ${{ inputs.REPO_DATE }}
             fi            
