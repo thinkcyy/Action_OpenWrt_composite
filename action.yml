@@ -97,6 +97,9 @@ runs:
           echo "FEEDS_DATE=${{ inputs.FEEDS_DATE }}" >> $GITHUB_ENV
           echo "EXTRA_FEEDS=${{ inputs.EXTRA_FEEDS }}" >> $GITHUB_ENV
           
+          //全局设置log date格式
+          git config --global log.date iso-strict-local
+          
           echo '当前执行步骤：1-下载Action仓库'          
           git clone $([[ ${{ inputs.ACTION_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/thinkcyy/OpenWRT-Action runner_root           
           cd runner_root
