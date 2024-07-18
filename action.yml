@@ -253,6 +253,7 @@ runs:
 
           echo '当前执行步骤：12.1-组织配置文件：'
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.manifest") ./artifact/
           cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config
 
           echo '当前执行步骤：12.2-组织bin文件：'
