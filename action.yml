@@ -8,8 +8,7 @@ inputs:
   
 runs:
   using: "composite"
-  steps:
-                   
+  steps:                   
     - name: Organize files         
       working-directory: ${{ github.workspace }}/runner_root/openwrt
       shell: bash
@@ -19,8 +18,7 @@ runs:
              tag_name=${{ env.COMPILE_CONFIG }}-${{ env.FILES_CONFIG }}
           else
              tag_name=${{ env.COMPILE_CONFIG }}
-          fi
-          
+          fi          
           
           tag_name=$tag_name-$(echo ${{ env.OP_REPO }} | sed 's|\/|.|').${{ env.REPO_BRANCH }}.${{ env.COMMITHASH }}-$(date +%Y%m%d-%H%M)
           
@@ -40,6 +38,7 @@ runs:
 
           echo '当前执行步骤：12.1-组织配置文件：'
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.manifest") ./artifact/
           cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config
 
           echo '当前执行步骤：12.2-组织bin文件：'
