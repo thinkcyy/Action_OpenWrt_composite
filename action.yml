@@ -194,6 +194,9 @@ runs:
           cat feeds.conf
                       
           echo '当前执行步骤：7-执行custom_feeds.sh'
+          
+          ../scripts/add_package_common.sh
+          
           if [ "${{ inputs.CUSTOM_FEEDS_SH }}" != 'n' ] ; then   
             echo "-已选择${{ inputs.CUSTOM_FEEDS_SH }}"
             echo "${{ inputs.CUSTOM_FEEDS_SH }}内容"
