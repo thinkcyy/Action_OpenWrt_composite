@@ -76,7 +76,7 @@ runs:
         FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
         REPO_TYPE: ${{ inputs.REPO_TYPE }}
         REPO_DATE: ${{ inputs.REPO_DATE }}
-        IMAGEBUILDER: n
+        IMAGEBUILDER: ${{ inputs.IMAGEBUILDER }}
         ACTION_DATE: ${{ inputs.ACTION_DATE }}
         FEEDS_DATE: ${{ inputs.FEEDS_DATE }}
       run:  |
@@ -246,13 +246,15 @@ runs:
              echo '-files文件总览：'
              tree ./files             
 
-             cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DISTRIB_REVISION     
-             cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DESCRIPTION 
-             echo '-向后调整tinc服务启动次序'             
-             sed -i 's|START=42|START=99|g' ./feeds/packages/net/tinc/files/tinc.init
-             sed -i 's|--pidfile|-d 0 --pidfile|g' ./feeds/packages/net/tinc/files/tinc.init
+
              # 遇错退出
              set -e
           else
              echo '-当前为public版本，跳过'
           fi
+          
+          cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DISTRIB_REVISION     
+          cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DESCRIPTION 
+          echo '-向后调整tinc服务启动次序'             
+          sed -i 's|START=42|START=99|g' ./feeds/packages/net/tinc/files/tinc.init
+          sed -i 's|--pidfile|-d 0 --pidfile|g' ./feeds/packages/net/tinc/files/tinc.init
