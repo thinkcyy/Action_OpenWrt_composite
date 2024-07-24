@@ -40,8 +40,9 @@ runs:
 
           echo '当前执行步骤：12.2-组织bin文件：'
           echo '-sysupgrade文件：'
-          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
           rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
+          
           
           echo '当前执行步骤：12.3-组织tar文件：'
           if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then             
