@@ -208,15 +208,17 @@ runs:
           rm -rf ./package/lean/default-settings/  
           
           REPO_TAG=$(echo ${{ env.OP_REPO }} | sed 's|\/|.|').${{ env.REPO_BRANCH }}.${{ env.COMMITHASH }}
+          echo $REPO_TAG
+          
           echo "REPO_TAG=$REPO_TAG" >> $GITHUB_ENV
           DATE_TAG=$(date +%Y%m%d)
           
           if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then
-               sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ env.REPO_TAG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-${{ env.REPO_TAG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|REVISION_tobeupdated|ImageBuilder-${REPO_TAG}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-${REPO_TAG}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           else          
-               sed -i "s|REVISION_tobeupdated|${{ env.REPO_TAG }}-${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|${{ env.REPO_TAG }}-${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|REVISION_tobeupdated|${REPO_TAG}-${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           fi
           cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings
           
