@@ -14,8 +14,8 @@ runs:
       shell: bash
       run: |      
           echo '当前执行步骤：11-打标'
-          tag_name=$(echo ${{ env.OP_REPO }} | sed 's|\/|.|').${{ env.REPO_BRANCH }}.${{ env.COMMITHASH }}-${{ env.COMPILE_CONFIG }}
-          [[ "${{ env.IMAGEBUILDER }}" = 'y' ]] && tag_name=ImageBuilder-$tag_name             
+          tag_name=${{ env.REPO_TAG }}-${{ env.COMPILE_CONFIG }}
+          [[ "${{ env.IMAGEBUILDER }}" = 'y' ]] && tag_name=ImageBuilder-$tag_name
           [[ "${{ env.FILES_CONFIG }}" != 'public' ]] && tag_name=$tag_name-${{ env.FILES_CONFIG }}
           tag_name=$tag_name-$(date +%Y%m%d-%H%M)
           
