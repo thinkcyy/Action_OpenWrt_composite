@@ -211,12 +211,13 @@ runs:
           echo '当前执行步骤：8-修改版本号'
           #删除lean的默认设置
           rm -rf ./package/lean/default-settings/
+          SED_TAG=$(echo ${{ env.OP_REPO }} | sed 's|\/|.|').${{ env.REPO_BRANCH }}.${{ env.COMMITHASH }}
           if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then
-               sed -i "s|REVISION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|REVISION_tobeupdated|ImageBuilder-$SED_TAG-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|ImageBuilder-$SED_TAG-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           else          
-               sed -i "s|REVISION_tobeupdated|${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${{ inputs.REPO_BRANCH }}-$COMMITHASH-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|REVISION_tobeupdated|$SED_TAG-${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|$SED_TAG-${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-$(date +%Y%m%d)|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           fi
           cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings
           
@@ -246,15 +247,12 @@ runs:
              echo '-files文件总览：'
              tree ./files             
 
-
              # 遇错退出
              set -e
           else
              echo '-当前为public版本，跳过'
           fi
-          
-          cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DISTRIB_REVISION     
-          cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings | grep DESCRIPTION 
+
           echo '-向后调整tinc服务启动次序'             
           sed -i 's|START=42|START=99|g' ./feeds/packages/net/tinc/files/tinc.init
           sed -i 's|--pidfile|-d 0 --pidfile|g' ./feeds/packages/net/tinc/files/tinc.init
