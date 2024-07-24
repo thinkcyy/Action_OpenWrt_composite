@@ -14,13 +14,10 @@ runs:
       shell: bash
       run: |      
           echo '当前执行步骤：11-打标'
-          if [ "${{ env.FILES_CONFIG }}" != 'public' ] ; then
-             tag_name=${{ env.COMPILE_CONFIG }}-${{ env.FILES_CONFIG }}
-          else
-             tag_name=${{ env.COMPILE_CONFIG }}
-          fi          
-          
-          tag_name=$tag_name-$(echo ${{ env.OP_REPO }} | sed 's|\/|.|').${{ env.REPO_BRANCH }}.${{ env.COMMITHASH }}-$(date +%Y%m%d-%H%M)
+          tag_name=$(echo ${{ env.OP_REPO }} | sed 's|\/|.|').${{ env.REPO_BRANCH }}.${{ env.COMMITHASH }}-${{ env.COMPILE_CONFIG }}
+          [[ "${{ env.IMAGEBUILDER }}" = 'y' ]] && tag_name=ImageBuilder-$tag_name             
+          [[ "${{ env.FILES_CONFIG }}" != 'public' ]] && tag_name=$tag_name-${{ env.FILES_CONFIG }}
+          tag_name=$tag_name-$(date +%Y%m%d-%H%M)
           
           echo $tag_name
           echo "TAG_NAME=$tag_name" >> $GITHUB_ENV  
@@ -52,9 +49,6 @@ runs:
              cd ./artifact/
              rename 's/.tar.xz/-${{ env.TAG_NAME }}.tar.xz/' *
              rename 's/.tar.zst/-${{ env.TAG_NAME }}.tar.zst/' *
-             tag_name=Imagebuilder-${{ env.TAG_NAME }} 
-             echo $tag_name
-             echo "TAG_NAME=$tag_name" >> $GITHUB_ENV
           fi
 
           echo '-产出文件总览：'
