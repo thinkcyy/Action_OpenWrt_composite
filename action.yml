@@ -117,7 +117,9 @@ runs:
 
           echo '当前执行步骤：2-下载OpenWrt源码仓库'
           echo "https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} "
-          git clone $([[ ${{ inputs.REPO_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./openwrt
+          #git clone $([[ ${{ inputs.REPO_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./openwrt
+          git clone https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo -b ${{ inputs.REPO_BRANCH }} --single-branch|| echo )  ./OpenWRT-Action/openwrt
+
           
           cd openwrt
 
