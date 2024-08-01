@@ -125,7 +125,7 @@ runs:
           COMMITHASH=$(git rev-parse --short HEAD)
           echo "COMMITHASH=$COMMITHASH" >> $GITHUB_ENV 
 
-          echo "-源码日期为："
+          echo "-源码$COMMITHASH日期为："
           git show  --pretty=fuller $COMMITHASH | grep CommitDate
 
           
