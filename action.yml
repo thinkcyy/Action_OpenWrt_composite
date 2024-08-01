@@ -24,7 +24,7 @@ inputs:
   REPO_BRANCH: 
     description: 
     required: false
-    default: 'master' 
+    default: 'n' 
   REPO_DEPTH: 
     description: 
     required: false
@@ -52,7 +52,7 @@ runs:
           pwd          
           echo '当前执行步骤：1-下载${{ inputs.REPO_TYPE }}仓库'
           git clone --depth 1  https://github.com/thinkcyy/OpenWRT-Action OpenWRT-Action           
-          git clone $([[ ${{ inputs.REPO_DEPTH }} != 'all' ]] && echo --depth ${{ inputs.REPO_DEPTH }} || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./OpenWRT-Action/openwrt
+          git clone $([[ ${{ inputs.REPO_DEPTH }} != 'all' ]] && echo --depth ${{ inputs.REPO_DEPTH }} || echo ) https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo -b ${{ inputs.REPO_BRANCH }} --single-branch|| echo )  ./OpenWRT-Action/openwrt
           cd ./OpenWRT-Action/openwrt
           $([[ ${{ inputs.REPO_COMMIT }} != 'latest' ]] && echo git checkout ${{ inputs.REPO_COMMIT }} || echo )
           COMMITHASH=$(git rev-parse --short HEAD)          
