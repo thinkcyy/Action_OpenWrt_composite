@@ -134,6 +134,7 @@ runs:
               git checkout ${{ inputs.REPO_DATE }}
             fi            
           else
+            echo 使用最新版本
             #echo "git clone --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.RREPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")" 
             git clone  --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.RREPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")  ./openwrt
             cd openwrt
@@ -194,37 +195,6 @@ runs:
                sed -i "s|REVISION_tobeupdated|${REPO_TAG}-${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
                sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${{ inputs.COMPILE_CONFIG }}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           fi
-          cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings
+
           
-          echo '当前执行步骤：9-添加自定义配置files'
-          if [ "${{ inputs.FILES_CONFIG }}" != 'public' ] ; then
-             # 忽略错误
-             set +e
-             echo "files版本为${{ inputs.FILES_CONFIG }}"             
-             echo "-正在复制common"
-             cp -vr ../../openwrt-config/common/files ./
-             echo "-正在复制common-${{ env.FILES_CONFIG }}"
-             cp -vr ../../openwrt-config/common/${{ inputs.FILES_CONFIG }}/files ./
-             echo "-正在复制${{ env.ROUTER_MODEL }}-common"
-             cp -vr ../../openwrt-config/${{ inputs.ROUTER_MODEL }}/common/files ./
-             echo "-正在复制${{ env.ROUTER_MODEL }}-${{ env.FILES_CONFIG }}"
-             cp -vr ../../openwrt-config/${{ inputs.ROUTER_MODEL }}/${{ inputs.FILES_CONFIG }}/files ./             
-             echo '-追加wg客户端'
-             cat ../../openwrt-config//common/network-wg0-peers >> ./files/etc/config/network
-             echo '-追dhcp客户端'
-             sed -i "s|subnet|192.168.${FILES_CONFIG}|g" ../../openwrt-config/common/dhcp-host
-             cat ../../openwrt-config/common/dhcp-host >> ./files/etc/config/dhcp
-             
-             echo '-处理文件权限'
-             chmod +x ./files/etc/tinc/tincvpn/tinc-up
-             chmod +x ./files/etc/tinc/tincvpn/tinc-down
-             chmod 400 ./files/etc/dropbear/authorized_keys
-             echo '-files文件总览：'
-             tree ./files             
-
-             # 遇错退出
-             set -e
-          else
-             echo '-当前为public版本，跳过'
-          fi
-
+          
