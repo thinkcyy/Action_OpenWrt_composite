@@ -181,7 +181,11 @@ runs:
           #删除lean的默认设置
           rm -rf ./package/lean/default-settings/  
           
-          REPO_TAG=$(echo ${{ inputs.OP_REPO }} | sed 's|\/|.|')$([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo .${{ inputs.REPO_BRANCH }}).$COMMITHASH
+          REPO_TAG=$(echo ${{ inputs.OP_REPO }} | sed 's|\/|.|')
+          echo $REPO_TAG
+          REPO_TAG1=$([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo .${{ inputs.REPO_BRANCH }})
+          echo $REPO_TAG1
+          REPO_TAG=$REPO_TAG$REPO_TAG1.$COMMITHASH
           echo $REPO_TAG
           
           echo "REPO_TAG=$REPO_TAG" >> $GITHUB_ENV
