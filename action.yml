@@ -14,7 +14,7 @@ runs:
       shell: bash
       run: |      
           echo '当前执行步骤：11-打标'
-          tag_name=${{ env.REPO_TAG }}-$([[ ${{ env.COMPILE_CONFIG }} != 'n' ]] && echo ${{ env.COMPILE_CONFIG}} || $([[ ${{ env.COMPILE_CONFIG_DIFF }} != 'n' ]] && echo ${{ env.COMPILE_CONFIG_DIFF }} || echo ${{ env.COMPILE_CONFIG_BASE}}))
+          tag_name=${{ env.REPO_TAG }}-$([[ "${{ env.COMPILE_CONFIG }}" != 'n' ]] && echo ${{ env.COMPILE_CONFIG}} || $([[ "${{ env.COMPILE_CONFIG_DIFF }}" != 'n' ]] && echo ${{ env.COMPILE_CONFIG_DIFF }} || echo ${{ env.COMPILE_CONFIG_BASE}}))
           [[ "${{ env.IMAGEBUILDER }}" = 'y' ]] && tag_name=ImageBuilder-$tag_name
           [[ "${{ env.FILES_CONFIG }}" != 'public' ]] && tag_name=$tag_name-${{ env.FILES_CONFIG }}
           tag_name=$tag_name-$(date +%Y%m%d-%H%M)
