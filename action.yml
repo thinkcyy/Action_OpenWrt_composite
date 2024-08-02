@@ -124,21 +124,22 @@ runs:
           if [ "${{ inputs.REPO_DATE }}" != 'latest' ] ; then   
             echo "-已选择锁定OpenWrt源码仓库日期"                        
             if [  ${#REPO_DATE} = '25' ] ; then
-              echo "git clone https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.RREPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")"
-              git clone https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.RREPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")  ./openwrt
+              echo "git clone https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")"
+              git clone https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")  ./openwrt
               cd openwrt
               git checkout $(git rev-list -n 1 --date=rfc --before=${{ inputs.REPO_DATE }} ${{ inputs.REPO_BRANCH }})       
             else
-              echo "git clone https://github.com/${{ inputs.OP_REPO }}"
               git clone https://github.com/${{ inputs.OP_REPO }}  ./openwrt          
               cd openwrt
               git checkout ${{ inputs.REPO_DATE }}
             fi            
           else
-            echo "git clone --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.RREPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")" 
-            git clone  --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.RREPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")  ./openwrt
+            echo "-已选择使用最新版本"
+            #echo "git clone --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")" 
+            git clone --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo -b "${{ inputs.REPO_BRANCH }}" --single-branch)  ./openwrt
             cd openwrt
           fi 
+
           
           COMMITHASH=$(git rev-parse --short HEAD)
           echo "COMMITHASH=$COMMITHASH" >> $GITHUB_ENV 
