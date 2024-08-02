@@ -129,7 +129,7 @@ runs:
               cd openwrt
               git checkout $(git rev-list -n 1 --date=rfc --before=${{ inputs.REPO_DATE }} ${{ inputs.REPO_BRANCH }})       
             else
-              echo "git clone https://github.com/${{ inputs.OP_REPO }}"
+
               git clone https://github.com/${{ inputs.OP_REPO }}  ./openwrt          
               cd openwrt
               git checkout ${{ inputs.REPO_DATE }}
