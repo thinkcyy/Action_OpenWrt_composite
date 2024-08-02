@@ -136,9 +136,10 @@ runs:
           else
             echo 使用最新版本
             #echo "git clone --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.RREPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")" 
-            git clone --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.RREPO_BRANCH }} != 'n' ]] && echo -b "${{ inputs.REPO_BRANCH }}" --single-branch)  ./openwrt
+            git clone --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.ACTION_DATE }} != 'n' ]] && echo -b "${{ inputs.REPO_BRANCH }}" --single-branch)  ./openwrt
             cd openwrt
           fi 
+
           
           COMMITHASH=$(git rev-parse --short HEAD)
           echo "COMMITHASH=$COMMITHASH" >> $GITHUB_ENV 
