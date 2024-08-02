@@ -229,6 +229,3 @@ runs:
              echo '-当前为public版本，跳过'
           fi
 
-          echo '-向后调整tinc服务启动次序'             
-          sed -i 's|START=42|START=99|g' ./feeds/packages/net/tinc/files/tinc.init
-          sed -i 's|--pidfile|-d 0 --pidfile|g' ./feeds/packages/net/tinc/files/tinc.init
