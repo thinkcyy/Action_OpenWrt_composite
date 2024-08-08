@@ -139,15 +139,17 @@ runs:
           rm -rf ./artifact/
           mkdir -p ./artifact/
           
-          if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
-             cp -vr ./openwrt/bin/ ./artifact/ 
-          else
-             cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
-             cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
-             cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config          
-             cd ./artifact/
-             rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
-          fi                   
+
+         set +e
+         cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
+         cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
+         cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.manifest") ./artifact/
+         cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.tar.xz") ./artifact/
+         cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.tar.zst") ./artifact/
+         cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config          
+         cd ./artifact/
+         rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
+                        
           ls -hl
           
     - name: Upload artifact
