@@ -137,18 +137,17 @@ runs:
           echo "targets产出文件："
           tree  ./openwrt/bin/targets/
           rm -rf ./artifact/
-          mkdir -p ./artifact/
-          
+          mkdir -p ./artifact/        
 
-         set +e
-         cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
-         cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
-         cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.manifest") ./artifact/
-         cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.tar.xz") ./artifact/
-         cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.tar.zst") ./artifact/
-         cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config          
-         cd ./artifact/
-         rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
+          set +e
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.manifest") ./artifact/
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.tar.xz") ./artifact/
+          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.tar.zst") ./artifact/
+          cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config          
+          cd ./artifact/
+          rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
                         
           ls -hl
           
