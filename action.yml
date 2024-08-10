@@ -230,6 +230,7 @@ runs:
           
           REPO_TAG=$(echo ${{ inputs.OP_REPO }} | sed 's|\/|.|')$([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo .${{ inputs.REPO_BRANCH }}||echo).$COMMITHASH
           echo "REPO_TAG为：$REPO_TAG"
+          echo "REPO_TAG=$REPO_TAG" >> $GITHUB_ENV
 
           if [ "${{ inputs.COMPILE_CONFIG }}" != 'n' ] ; then
              COMPILE_CONFIG_TAG=${{ inputs.COMPILE_CONFIG }}
@@ -241,16 +242,16 @@ runs:
              fi
           fi
           echo "COMPILE_CONFIG_TAG为：$COMPILE_CONFIG_TAG"
+          echo "COMPILE_CONFIG_TAG=$COMPILE_CONFIG_TAG" >> $GITHUB_ENV
           
-          echo "REPO_TAG=$REPO_TAG" >> $GITHUB_ENV
           DATE_TAG=$(date +%Y%m%d)
           
           if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then
-               #sed -i "s|REVISION_tobeupdated|${REPO_TAG}-${{ inputs.COMPILE_CONFIG_TAG }}-ImageBuilder-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${{ inputs.COMPILE_CONFIG_TAG }}-ImageBuilder-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               #sed -i "s|REVISION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-ImageBuilder-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-ImageBuilder-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           else          
-               #sed -i "s|REVISION_tobeupdated|${REPO_TAG}-${{ inputs.COMPILE_CONFIG_TAG }}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${{ inputs.COMPILE_CONFIG_TAG }}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               #sed -i "s|REVISION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+               sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           fi
           cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings
           
@@ -285,7 +286,3 @@ runs:
           else
              echo '-当前为public版本，跳过'
           fi
-
-          echo '-向后调整tinc服务启动次序'             
-          sed -i 's|START=42|START=99|g' ./feeds/packages/net/tinc/files/tinc.init
-          sed -i 's|--pidfile|-d 0 --pidfile|g' ./feeds/packages/net/tinc/files/tinc.init
