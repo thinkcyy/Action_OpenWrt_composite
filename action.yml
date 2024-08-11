@@ -149,8 +149,9 @@ runs:
 
           
           #默认设置
-          mkdir -p ./package/thinkcy
-          cp -vr ../thinkcy-settings ./package/thinkcy       
+          #mkdir -p ./package/thinkcy
+          #cp -vr ../thinkcy-settings ./package/thinkcy       
+          cp -vr ../common-config/*.config ../$REPO_TYPE/config
           
           echo '当前执行步骤：3-更新menuconfig文件'          
           chmod +x ../$REPO_TYPE/scripts/*.sh
