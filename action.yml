@@ -236,9 +236,9 @@ runs:
              COMPILE_CONFIG_TAG=${{ inputs.COMPILE_CONFIG }}
           else
              if [ "${{ inputs.COMPILE_CONFIG_DIFF }}" != 'n' ] ; then
-                COMPILE_CONFIG_TAG=${{ inputs.COMPILE_CONFIG }}
+                COMPILE_CONFIG_TAG=${{ inputs.COMPILE_CONFIG_DIFF }}
              else
-                COMPILE_CONFIG_TAG=${{ inputs.COMPILE_BASE }}
+                COMPILE_CONFIG_TAG=${{ inputs.COMPILE_CONFIG_BASE }}
              fi
           fi
           echo "COMPILE_CONFIG_TAG为：$COMPILE_CONFIG_TAG"
