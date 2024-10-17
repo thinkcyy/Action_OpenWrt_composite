@@ -200,8 +200,12 @@ runs:
             ../scripts/select_feed_commit.sh
           else
             if [ "${{ inputs.FEEDS_DATE }}" != 'latest' ] ; then   
-                echo "-已选择单独锁定feeds日期"
-                ../scripts/select_feed_commit.sh ${{ inputs.FEEDS_DATE }}
+                echo "-已选择单独锁定feeds日期"                             
+                    ../scripts/select_feed_commit.sh ${{ inputs.FEEDS_DATE }} 
+                    if [ "${{ inputs.NSS_DATE }}" != 'n' ] ; then
+                     echo "--已选择单独锁定nss_packages日期" 
+                     ../scripts/select_feed_commit.sh ${{ inputs.NSS_DATE }} nss_packages
+                    fi            
             else
                 cp ./feeds.conf.default ./feeds.conf
             fi   
