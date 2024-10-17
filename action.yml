@@ -65,6 +65,10 @@ inputs:
     description: 
     required: false
     default: 'latest'  
+  NSS_DATE: 
+    description: 
+    required: false
+    default: 'n' 
   EXTRA_FEEDS: 
     description: 
     required: false
