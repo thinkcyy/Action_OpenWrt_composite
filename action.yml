@@ -197,8 +197,9 @@ runs:
           echo "-删除未启用feeds源"
           sed -i '/^#/d' ./feeds.conf.default
           sed -i '/#/d' ./feeds.conf.default
+          ./scripts/feeds update -a
                     
-          echo '当前执行步骤：6-生成feeds.conf'
+          echo '当前执行步骤：6-生成feeds.conf'          
           if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then   
             echo "-已选择根据源码日期锁定feeds日期"
             ../scripts/select_feed_commit.sh
