@@ -21,7 +21,7 @@ runs:
           tag_name=${{ env.REPO_TAG }}-$tag_name
           [[ "${{ env.IMAGEBUILDER }}" = 'y' ]] && tag_name=ImageBuilder-$tag_name
           [[ "${{ env.FILES_CONFIG }}" != 'public' ]] && tag_name=$tag_name-${{ env.FILES_CONFIG }}
-          tag_name=$tag_name-$(date +%Y%m%d-%H%M)-${{ env.COMMITHASH }}
+          tag_name=$tag_name-$(date +%Y%m%d-%H%M).${{ env.COMMITHASH }}
           
           echo $tag_name
           echo "TAG_NAME=$tag_name" >> $GITHUB_ENV  
