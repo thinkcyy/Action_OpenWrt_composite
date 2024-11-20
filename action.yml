@@ -71,9 +71,9 @@ runs:
       run: |          
           echo '当前执行步骤：13-添加额外发布文件'    
           set +e
-          if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then
+          #if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then
              cd ./runner_root
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sdk*") ./artifact/
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*toolchain*") ./artifact/
-          fi     
+         # fi     
           set -e
