@@ -232,6 +232,19 @@ runs:
             cat ../$REPO_TYPE/scripts/custom_feeds.sh          
             ../$REPO_TYPE/scripts/custom_feeds.sh            
           fi
+
+                   
+          if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
+            echo '-当前执行步骤：检查ImageBuilder状态'
+            result=$(echo ./.config | grep "CONFIG_IB=y")
+            if [[ "$result" = "" ]] ; then
+                    echo "--未发现CONFIG_IB=y配置" 
+            else
+                    echo "--已发现CONFIG_IB=y配置" 
+            fi
+          fi
+            
+          
                              
           echo '当前执行步骤：8-修改版本号'
           #删除lean的默认设置
