@@ -75,4 +75,5 @@ runs:
              cd ./runner_root
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sdk*") ./artifact/
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*toolchain*") ./artifact/
-          fi        
+          fi     
+          set -e
