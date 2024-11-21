@@ -236,6 +236,8 @@ runs:
                    
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
             echo '-当前执行步骤：检查ImageBuilder状态'
+            pwd
+            ls -l
             cat .config | grep "CONFIG_IB=y"
           fi
             
