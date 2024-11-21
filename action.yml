@@ -76,7 +76,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Compile      
+    - name: PrepareSource      
       shell: bash
       env:
         ROUTER_MODEL: ${{ inputs.ROUTER_MODEL }}   
@@ -159,9 +159,11 @@ runs:
           
           echo '当前执行步骤：3-更新menuconfig文件'          
           chmod +x ../$REPO_TYPE/scripts/*.sh
-          [[ ${{ inputs.COMPILE_CONFIG_BASE }} != 'n' ]] && echo "基础配置COMPILE_CONFIG_BASE为：${{ inputs.COMPILE_CONFIG_BASE }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG_BASE }}.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config 
+          [[ ${{ inputs.COMPILE_CONFIG_BASE }} != 'n' ]] && echo "基础配置COMPILE_CONFIG_BASE为：${{ inputs.COMPILE_CONFIG_BASE }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG_BASE }}.config > ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config 
           [[ ${{ inputs.COMPILE_CONFIG_DIFF }} != 'n' ]] && echo "追加配置COMPILE_CONFIG_DIFF为：${{ inputs.COMPILE_CONFIG_DIFF }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG_DIFF }}.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config 
           [[ ${{ inputs.COMPILE_CONFIG }} != 'n' ]] && echo "其他配置COMPILE_CONFIG为：${{ inputs.COMPILE_CONFIG }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG }}.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+
+          
           
           echo '当前执行步骤：4-检查ImageBuilder'    
           if [ "${{ inputs.IMAGEBUILDER }}" = 'aaa' ] ; then
@@ -237,7 +239,8 @@ runs:
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
             echo '-当前执行步骤：检查ImageBuilder状态'
             pwd
-            ls -l
+            ls -la
+            cat .config
             cat .config | grep "CONFIG_IB=y"
           fi
             
