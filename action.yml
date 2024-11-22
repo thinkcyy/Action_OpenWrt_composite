@@ -179,7 +179,7 @@ runs:
               echo CONFIG_IB_STANDALONE=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
               echo CONFIG_SDK=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
               echo CONFIG_MAKE_TOOLCHAIN=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              echo CONFIG_ALL_KMODS=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
+              # echo CONFIG_ALL_KMODS=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
               echo CONFIG_BUILD_NLS=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config              
           fi          
           
