@@ -152,13 +152,21 @@ runs:
             cd openwrt
           fi 
 
+          # 进行Cherry-Pick
+          if [ "${{ inputs.CHERRY_START }}" != 'n' ] ; then   
+            echo "-已选择Cherry-Pick"                        
+            if [ "${{ inputs.CHERRY_END}}" != 'n' ] ; then
+              git cherry-pick ${{ inputs.CHERRY_START }}..${{ inputs.CHERRY_END}}
+            else
+              git cherry-pick ${{ inputs.CHERRY_START }}
+            fi
+          fi
           
           COMMITHASH=$(git rev-parse --short HEAD)
           echo "COMMITHASH=$COMMITHASH" >> $GITHUB_ENV 
 
           echo "-源码$COMMITHASH日期为："
           git show  --pretty=fuller $COMMITHASH | grep CommitDate
-
           
           #默认设置
           #mkdir -p ./package/thinkcy
