@@ -156,7 +156,7 @@ runs:
           else
             echo "-已选择使用最新版本"
             #echo "git clone --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")" 
-            git clone --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo -b "${{ inputs.REPO_BRANCH }}" --single-branch)  ./openwrt
+            git clone https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo -b "${{ inputs.REPO_BRANCH }}" --single-branch)  ./openwrt
             cd openwrt
           fi 
 
