@@ -73,6 +73,14 @@ inputs:
     description: 
     required: false
     default: 'n'
+  CHERRY_START: 
+    description: 
+    required: false
+    default: 'n'
+  CHERRY_END: 
+    description: 
+    required: false
+    default: 'n'
 runs:
   using: "composite"
   steps:
