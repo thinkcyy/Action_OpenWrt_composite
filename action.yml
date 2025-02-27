@@ -156,7 +156,7 @@ runs:
           if [ "${{ inputs.CHERRY_START }}" != 'n' ] ; then   
             echo "-已选择Cherry-Pick"                        
             if [ "${{ inputs.CHERRY_END}}" != 'n' ] ; then
-              git cherry-pick ${{ inputs.CHERRY_START }}..${{ inputs.CHERRY_END}}
+              git cherry-pick ${{ inputs.CHERRY_START }}^..${{ inputs.CHERRY_END}}
             else
               git cherry-pick ${{ inputs.CHERRY_START }}
             fi
