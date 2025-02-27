@@ -81,6 +81,14 @@ inputs:
     description: 
     required: false
     default: 'n'
+  CHECKOUT_FILE_COMMIT: 
+    description: 
+    required: false
+    default: 'n'
+  CHECKOUT_FILE: 
+    description: 
+    required: false
+    default: 'n'
 runs:
   using: "composite"
   steps:
@@ -160,6 +168,14 @@ runs:
             else
               git cherry-pick ${{ inputs.CHERRY_START }}
             fi
+          fi
+
+          # 进行单个文件checkout
+          if [ "${{ inputs.CHECKOUT_FILE_COMMIT }}" != 'n' ] ; then   
+            echo "-CheckOut节点：${{ inputs.CHECKOUT_FILE_COMMIT }}文件："
+            for f in ${{ inputs.CHECKOUT_FILE }}
+            do echo "--文件：$f" && git checkout ${{ inputs.CHECKOUT_FILE_COMMIT }} -- $f
+            done
           fi
           
           COMMITHASH=$(git rev-parse --short HEAD)
