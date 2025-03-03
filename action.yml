@@ -172,7 +172,7 @@ runs:
 
           # 进行单个文件checkout
           if [ "${{ inputs.CHECKOUT_FILE_COMMIT }}" != 'n' ] ; then   
-            echo "-CheckOut节点：${{ inputs.CHECKOUT_FILE_COMMIT }}文件："
+            echo "-已选择CheckOut节点：${{ inputs.CHECKOUT_FILE_COMMIT }}"
             for f in ${{ inputs.CHECKOUT_FILE }}
             do echo "--文件：$f" && git checkout ${{ inputs.CHECKOUT_FILE_COMMIT }} -- $f
             done
