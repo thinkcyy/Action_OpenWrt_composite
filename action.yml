@@ -170,11 +170,11 @@ runs:
             fi
           fi
 
-          # 进行单个文件checkout
+          # 检出文件checkout
           if [ "${{ inputs.CHECKOUT_FILE_COMMIT }}" != 'n' ] ; then   
             echo "-已选择CheckOut节点：${{ inputs.CHECKOUT_FILE_COMMIT }}"
             for f in ${{ inputs.CHECKOUT_FILE }}
-            do echo "--文件：$f" && git checkout ${{ inputs.CHECKOUT_FILE_COMMIT }} -- $f
+            do echo "--文件：$f" && git checkout ${{ inputs.CHECKOUT_FILE_COMMIT }} -- $f && git diff $f
             done
           fi
           
