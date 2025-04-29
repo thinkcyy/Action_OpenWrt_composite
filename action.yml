@@ -173,7 +173,7 @@ runs:
             echo "-已选择Cherry-Pick"
             if [ "${{ inputs.CHERRY_REPO}}" != 'n' ] ; then
               git remote add cherry_repo https://github.com/${{ inputs.CHERRY_REPO }}
-              git fetch --all
+              git fetch cherry_branch:${{ inputs.CHERRY_BRANCH }} 
               #git checkout -b ${{ inputs.CHERRY_BRANCH }} 
             fi
             if [ "${{ inputs.CHERRY_END}}" != 'n' ] ; then
