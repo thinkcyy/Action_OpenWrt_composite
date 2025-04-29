@@ -73,6 +73,14 @@ inputs:
     description: 
     required: false
     default: 'n'
+  CHERRY_REPO: 
+    description: 
+    required: false
+    default: 'n'
+  CHERRY_BRANCH: 
+    description: 
+    required: false
+    default: 'n'
   CHERRY_START: 
     description: 
     required: false
@@ -162,7 +170,10 @@ runs:
 
           # 进行Cherry-Pick
           if [ "${{ inputs.CHERRY_START }}" != 'n' ] ; then   
-            echo "-已选择Cherry-Pick"                        
+            echo "-已选择Cherry-Pick"
+            if [ "${{ inputs.CHERRY_REPO}}" != 'n' ] ; then
+              git remote add cherry_repo https://github.com/${{ inputs.CHERRY_REPO }}
+              git fetch cherry_repo ${{ inputs.CHERRY_BRANCH}}
             if [ "${{ inputs.CHERRY_END}}" != 'n' ] ; then
               git cherry-pick ${{ inputs.CHERRY_START }}${{ inputs.CHERRY_END}}
             else
