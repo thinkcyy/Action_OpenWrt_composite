@@ -174,7 +174,7 @@ runs:
             if [ "${{ inputs.CHERRY_REPO}}" != 'n' ] ; then
               git remote add cherry_repo https://github.com/${{ inputs.CHERRY_REPO }}
               git fetch cherry_repo
-              git checkout -b ${{ inputs.CHERRY_BRANCH }} 
+              #git checkout -b ${{ inputs.CHERRY_BRANCH }} 
             fi
             if [ "${{ inputs.CHERRY_END}}" != 'n' ] ; then
               git cherry-pick ${{ inputs.CHERRY_START }}${{ inputs.CHERRY_END}}
