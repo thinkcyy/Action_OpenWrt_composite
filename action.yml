@@ -21,7 +21,7 @@ runs:
           tag_name=${{ env.REPO_TAG }}-$tag_name
           [[ "${{ env.IMAGEBUILDER }}" = 'y' ]] && tag_name=ImageBuilder-$tag_name
           [[ "${{ env.FILES_CONFIG }}" != 'public' ]] && tag_name=$tag_name-${{ env.FILES_CONFIG }}
-          KERNEL=$((ls packages/ | grep kernel) | cut -d '-' -f2 | cut -d '~' -f1)
+          KERNEL=$((find bin/packages/ -type f -name "kernel-*" | grep kernel) | cut -d '-' -f2 | cut -d '~' -f1)
           echo "KERNEL=$KERNEL" >> $GITHUB_ENV
           tag_name=$tag_name-$(date +%Y%m%d-%H%M).$KERNEL.${{ env.COMMITHASH }}
           
