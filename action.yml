@@ -21,7 +21,9 @@ runs:
           tag_name=${{ env.REPO_TAG }}-$tag_name
           [[ "${{ env.IMAGEBUILDER }}" = 'y' ]] && tag_name=ImageBuilder-$tag_name
           [[ "${{ env.FILES_CONFIG }}" != 'public' ]] && tag_name=$tag_name-${{ env.FILES_CONFIG }}
-          tag_name=$tag_name-$(date +%Y%m%d-%H%M).${{ env.COMMITHASH }}
+          KERNEL=$((ls packages/ | grep kernel) | cut -d '-' -f2 | cut -d '~' -f1)
+          echo "KERNEL=$KERNEL" >> $GITHUB_ENV
+          tag_name=$tag_name-$(date +%Y%m%d-%H%M).$KERNEL.${{ env.COMMITHASH }}
           
           echo $tag_name
           echo "TAG_NAME=$tag_name" >> $GITHUB_ENV  
@@ -38,9 +40,11 @@ runs:
           mkdir -p ./artifact/
 
           echo '当前执行步骤：12.1-组织配置文件：'
-          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
-          cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*.manifest") ./artifact/
-          cp -vr ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config
+          cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
+          cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.manifest") ./artifact/
+          cp -r ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config
+          cp -rf $(find ./openwrt/packages/ -type f -name "kernel-*") ./artifact/
+          
 
           echo '当前执行步骤：12.2-组织bin文件：'
           echo '-sysupgrade文件：'
