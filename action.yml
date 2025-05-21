@@ -19,13 +19,18 @@ runs:
           tag_name=$([[ "${{ env.COMPILE_CONFIG }}" != 'n' ]] && echo ${{ env.COMPILE_CONFIG}} || echo $tag_name)
           echo $tag_name
           tag_name=${{ env.REPO_TAG }}-$tag_name
-          [[ "${{ env.IMAGEBUILDER }}" = 'y' ]] && tag_name=ImageBuilder-$tag_name
-          [[ "${{ env.FILES_CONFIG }}" != 'public' ]] && tag_name=$tag_name-${{ env.FILES_CONFIG }}
-          KERNEL=$((find bin/packages/ -type f -name "kernel-*" | grep kernel) | cut -d '-' -f2 | cut -d '~' -f1)
-          echo "KERNEL=$KERNEL" >> $GITHUB_ENV
-          tag_name=$tag_name-$(date +%Y%m%d-%H%M).$KERNEL.${{ env.COMMITHASH }}
-          
           echo $tag_name
+          [[ "${{ env.IMAGEBUILDER }}" = 'y' ]] && tag_name=ImageBuilder-$tag_name
+          echo $tag_name
+          [[ "${{ env.FILES_CONFIG }}" != 'public' ]] && tag_name=$tag_name-${{ env.FILES_CONFIG }}
+          echo $tag_name
+          cd bin/packages
+          KERNEL=$((find -type f -name "kernel-*" | grep kernel) | cut -d '-' -f2 | cut -d '~' -f1)
+          echo $KERNEL
+          echo "KERNEL=$KERNEL" >> $GITHUB_ENV
+          tag_name=$tag_name-$(date +%Y%m%d-%H%M).$KERNEL.${{ env.COMMITHASH }}          
+          echo $tag_name
+          
           echo "TAG_NAME=$tag_name" >> $GITHUB_ENV  
 
     - name: Organize files      
@@ -43,7 +48,7 @@ runs:
           cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
           cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.manifest") ./artifact/
           cp -r ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config
-          cp -rf $(find ./openwrt/packages/ -type f -name "kernel-*") ./artifact/
+          cp -rf $(find ./openwrt/bin/packages/ -type f -name "kernel-*") ./artifact/
           
 
           echo '当前执行步骤：12.2-组织bin文件：'
