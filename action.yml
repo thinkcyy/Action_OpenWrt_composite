@@ -24,11 +24,12 @@ runs:
           echo $tag_name
           [[ "${{ env.FILES_CONFIG }}" != 'public' ]] && tag_name=$tag_name-${{ env.FILES_CONFIG }}
           echo $tag_name
-          pwd
-          tree -L 4
+
           cd ./bin/packages
-          tree -L 4
-          KERNEL=$((find -type f -name "kernel-*" | grep kernel) | cut -d '-' -f2 | cut -d '~' -f1)
+
+          K=$(find -type f -name "kernel-*" )
+          K1=${K##*/}
+          KERNEL=$(echo $K1 | cut -d '-' -f2 | cut -d '~' -f1)
           echo $KERNEL
           echo "KERNEL=$KERNEL" >> $GITHUB_ENV
           tag_name=$tag_name-$(date +%Y%m%d-%H%M).$KERNEL.${{ env.COMMITHASH }}          
