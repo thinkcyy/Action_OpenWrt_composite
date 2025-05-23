@@ -25,7 +25,7 @@ runs:
           [[ "${{ env.FILES_CONFIG }}" != 'public' ]] && tag_name=$tag_name.[${{ env.FILES_CONFIG }}]
           echo $tag_name
 
-          cd ./bin/packages
+          cd ./bin
 
           K=$(find -type f -name "kernel-*" )
           K1=${K##*/}
@@ -44,7 +44,7 @@ runs:
           echo '当前执行步骤：12-组织产出文件'          
           cd ./runner_root
           echo "targets产出文件："
-          tree  ./openwrt/bin/targets/
+          tree  ./openwrt/bin/
           rm -rf ./artifact/
           mkdir -p ./artifact/
 
@@ -52,7 +52,7 @@ runs:
           cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
           cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.manifest") ./artifact/
           cp -r ./openwrt/.config ./artifact/defconfig-${{ env.TAG_NAME }}.config
-          cp -rf $(find ./openwrt/bin/packages/ -type f -name "kernel-*") ./artifact/
+          cp -rf $(find ./openwrt/bin/ -type f -name "kernel-*") ./artifact/
           
 
           echo '当前执行步骤：12.2-组织bin文件：'
@@ -63,7 +63,7 @@ runs:
           
           echo '当前执行步骤：12.3-组织tar文件：'
           if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then             
-             cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*imagebuilder*") ./artifact/             
+             cp -rf $(find ./openwrt/bin/targets/ -type f -name "*imagebuilder*") ./artifact/
              cd ./artifact/
              rename 's/.tar.xz/-${{ env.TAG_NAME }}.tar.xz/' *
              rename 's/.tar.zst/-${{ env.TAG_NAME }}.tar.zst/' *
