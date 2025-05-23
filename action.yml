@@ -18,7 +18,7 @@ runs:
           echo $tag_name
           tag_name=$([[ "${{ env.COMPILE_CONFIG }}" != 'n' ]] && echo ${{ env.COMPILE_CONFIG}} || echo $tag_name)
           echo $tag_name
-          tag_name=${{ env.REPO_TAG }}—$tag_name
+          tag_name=${{ env.REPO_TAG }}.$tag_name
           echo $tag_name
           [[ "${{ env.IMAGEBUILDER }}" = 'y' ]] && tag_name=ImageBuilder-$tag_name
           echo $tag_name
