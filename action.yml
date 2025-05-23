@@ -18,7 +18,7 @@ runs:
           echo $tag_name
           tag_name=$([[ "${{ env.COMPILE_CONFIG }}" != 'n' ]] && echo ${{ env.COMPILE_CONFIG}} || echo $tag_name)
           echo $tag_name
-          tag_name=${{ env.REPO_TAG }}-$tag_name
+          tag_name=${{ env.REPO_TAG }}~$tag_name
           echo $tag_name
           [[ "${{ env.IMAGEBUILDER }}" = 'y' ]] && tag_name=ImageBuilder-$tag_name
           echo $tag_name
@@ -32,7 +32,7 @@ runs:
           KERNEL=$(echo $K1 | cut -d '-' -f2 | cut -d '~' -f1)
           echo $KERNEL
           echo "KERNEL=$KERNEL" >> $GITHUB_ENV
-          tag_name=$tag_name-$(date +%Y%m%d-%H%M).$KERNEL.${{ env.COMMITHASH }}          
+          tag_name=$tag_name-$(date +%Y%m%d-%H%M)~$KERNEL~${{ env.COMMITHASH }}          
           echo $tag_name
           
           echo "TAG_NAME=$tag_name" >> $GITHUB_ENV  
