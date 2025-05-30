@@ -27,9 +27,11 @@ runs:
 
           cd ./bin
 
-          K=$(find -type f -name "kernel-*" )
+          K=$(find -type f -name "kernel*" )
           K1=${K##*/}
-          KERNEL=$(echo $K1 | cut -d '-' -f2 | cut -d '~' -f1)
+          K2=${K1:7}
+          [[ $K2 =~ \~ ]] && KERNEL=${K2%%~*} || KERNEL=${K2%%-*}
+          # KERNEL=$(echo $K2 | cut -d '~' -f1) || KERNEL=$(echo $K2 | cut -d '~' -f1)
           echo $KERNEL
           echo "KERNEL=$KERNEL" >> $GITHUB_ENV
           tag_name=$tag_name.$(date +%Y%m%d-%H%M)-$KERNEL-${{ env.COMMITHASH }}
