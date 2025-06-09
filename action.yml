@@ -25,7 +25,8 @@ runs:
             for config in $CONFIG_VERIFIED
             do
               echo 添加$config
-              sed -i '$a'"${config}"'\n' ./.config
+              #sed -i '$a'"${config}"'\n' ./.config
+              echo $config >> ./.config
             done
           fi
           
@@ -33,7 +34,8 @@ runs:
             for config in $CONFIG_TO_ADD
             do
               echo 添加$config            
-              sed -i '$a'"${config}"'\n' ./.config
+              #sed -i '$a'"${config}"'\n' ./.config
+              echo $config >> ./.config
             done
           fi
 
@@ -41,6 +43,7 @@ runs:
             for config in $CONFIG_TO_DEL
             do
               echo 添加$config            
-              sed -i '$a'"${config}"'\n' ./.config
+              #sed -i '$a'"${config}"'\n' ./.config
+              echo $config >> ./.config
             done
           fi
