@@ -23,20 +23,23 @@ runs:
           if [ ! -z ${CONFIG_VERIFIED} ] ; then
             for config in $CONFIG_VERIFIED
             do
-              sed -i '$a'"${config}"'' ./t
+              echo 添加$config
+              sed -i '$a'"${config}"'' ./.config
             done
           fi
           
           if [ ! -z ${CONFIG_TO_ADD} ] ; then
             for config in $CONFIG_TO_ADD
             do
-              sed -i '$a'"${config}"'' ./t
+              echo 添加$config            
+              sed -i '$a'"${config}"'' ./.config
             done
           fi
 
           if [ ! -z ${CONFIG_TO_DEL} ] ; then
             for config in $CONFIG_TO_DEL
             do
-              sed -i '$a'"${config}"'' ./t
+              echo 添加$config            
+              sed -i '$a'"${config}"'' ./.config
             done
-          fi      
+          fi
