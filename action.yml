@@ -1,100 +1,13 @@
 name: 'Action_OpenWrt_composite'
 description: 'Action'
 inputs:
-  ROUTER_MODEL:  
-    description: 'MODEL'
-    required: true
-    default: 'AX6'
-  COMPILE_CONFIG_BASE: 
-    description: 'CONFIG'
+  CONFIG_VERIFIED:  
     required: false
     default: 'n'
-  COMPILE_CONFIG_DIFF: 
-    description: 'CONFIG'
+  CONFIG_TO_ADD:  
     required: false
     default: 'n'
-  COMPILE_CONFIG: 
-    description: 'CONFIG'
-    required: false
-    default: 'n'
-  IMAGEBUILDER: 
-    description: 'IMAGEBUILDER'
-    required: false
-    default: 'n'
-  FILES_CONFIG: 
-    description: 
-    required: false
-    default: 'public'
-  OP_REPO: 
-    description: 
-    required: false
-    default: 'AgustinLorenzo/openwrt'    
-  REPO_BRANCH: 
-    description: 
-    required: false
-    default: 'n' 
-  REPO_DEPTH: 
-    description: 
-    required: false
-    default: 'all'
-  REPO_DATE: 
-    description: 
-    required: false
-    default: 'latest' 
-  REPO_TYPE: 
-    description: 
-    required: false
-    default: 'zhKong'     
-  MATCH_FEED_HASH: 
-    description: 
-    required: false
-    default: 'n'
-  ACTION_DATE: 
-    description: 
-    required: false
-    default: 'latest'    
-  DEFAULT_FEEDS: 
-    description: 
-    required: false
-    default: 'n' 
-  CUSTOM_FEEDS_SH: 
-    description: 
-    required: false
-    default: 'n' 
-  FEEDS_DATE: 
-    description: 
-    required: false
-    default: 'latest'  
-  NSS_DATE: 
-    description: 
-    required: false
-    default: 'n' 
-  EXTRA_FEEDS: 
-    description: 
-    required: false
-    default: 'n'
-  CHERRY_REPO: 
-    description: 
-    required: false
-    default: 'n'
-  CHERRY_BRANCH: 
-    description: 
-    required: false
-    default: 'n'
-  CHERRY_START: 
-    description: 
-    required: false
-    default: 'n'
-  CHERRY_END: 
-    description: 
-    required: false
-    default: 'n'
-  CHECKOUT_FILE_COMMIT: 
-    description: 
-    required: false
-    default: 'n'
-  CHECKOUT_FILE: 
-    description: 
+  CONFIG_TO_DEL:  
     required: false
     default: 'n'
 runs:
@@ -103,220 +16,27 @@ runs:
     - name: PrepareSource      
       shell: bash
       env:
-        ROUTER_MODEL: ${{ inputs.ROUTER_MODEL }}   
-        COMPILE_CONFIG: ${{ inputs.COMPILE_CONFIG }} 
-        FILES_CONFIG: ${{ inputs.FILES_CONFIG }} 
-        REPO_TYPE: ${{ inputs.REPO_TYPE }}
-        REPO_DATE: ${{ inputs.REPO_DATE }}
-        IMAGEBUILDER: ${{ inputs.IMAGEBUILDER }}
-        ACTION_DATE: ${{ inputs.ACTION_DATE }}
-        FEEDS_DATE: ${{ inputs.FEEDS_DATE }}
+        CONFIG_VERIFIED: ${{ inputs.CONFIG_VERIFIED }}
+        CONFIG_TO_ADD: ${{ inputs.CONFIG_TO_ADD }}
+        CONFIG_TO_DEL: ${{ inputs.CONFIG_TO_DEL }}
       run:  |
-          echo "ROUTER_MODEL=${{ inputs.ROUTER_MODEL }}" >> $GITHUB_ENV
-          echo "COMPILE_CONFIG=${{ inputs.COMPILE_CONFIG }}" >> $GITHUB_ENV
-          echo "IMAGEBUILDER=${{ inputs.IMAGEBUILDER }}" >> $GITHUB_ENV
-          echo "FILES_CONFIG=${{ inputs.FILES_CONFIG }}" >> $GITHUB_ENV
-          echo "OP_REPO=${{ inputs.OP_REPO }}" >> $GITHUB_ENV
-          echo "REPO_BRANCH=${{ inputs.REPO_BRANCH }}" >> $GITHUB_ENV
-          echo "REPO_DEPTH=${{ inputs.REPO_DEPTH }}" >> $GITHUB_ENV
-          echo "REPO_DATE=${{ inputs.REPO_DATE }}" >> $GITHUB_ENV
-          echo "REPO_TYPE=${{ inputs.REPO_TYPE }}" >> $GITHUB_ENV
-          echo "MATCH_FEED_HASH=${{ inputs.MATCH_FEED_HASH }}" >> $GITHUB_ENV
-          echo "ACTION_DATE=${{ inputs.ACTION_DATE }}" >> $GITHUB_ENV
-          echo "DEFAULT_FEEDS=${{ inputs.DEFAULT_FEEDS }}" >> $GITHUB_ENV
-          echo "CUSTOM_FEEDS_SH=${{ inputs.CUSTOM_FEEDS_SH }}" >> $GITHUB_ENV
-          echo "FEEDS_DATE=${{ inputs.FEEDS_DATE }}" >> $GITHUB_ENV
-          echo "EXTRA_FEEDS=${{ inputs.EXTRA_FEEDS }}" >> $GITHUB_ENV
-          echo "COMPILE_CONFIG_BASE=${{ inputs.COMPILE_CONFIG_BASE }}" >> $GITHUB_ENV
-          echo "COMPILE_CONFIG_DIFF=${{ inputs.COMPILE_CONFIG_DIFF }}" >> $GITHUB_ENV
-          
-          #全局设置log date格式
-          git config --global log.date iso-strict-local
-          
-          echo '当前执行步骤：1-下载Action仓库'          
-          git clone $([[ ${{ inputs.ACTION_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/thinkcyy/OpenWRT-Action runner_root           
-          cd runner_root
-          if [ "${{ inputs.ACTION_DATE }}" != 'latest' ] ; then   
-            echo "-已选择锁定Action仓库日期"                        
-            if [  ${#ACTION_DATE} = '25' ] ; then
-              git checkout $(git rev-list -n 1 --all --before=${{ inputs.ACTION_DATE }})       
-            else
-              git checkout ${{ inputs.ACTION_DATE }}
-            fi            
-          fi          
-
-          echo '当前执行步骤：2-下载OpenWrt源码仓库'
-          #git clone $([[ ${{ inputs.REPO_DATE }} = 'latest' ]] && echo --depth 1 || echo ) https://github.com/${{ inputs.OP_REPO }} -b ${{ inputs.REPO_BRANCH }} --single-branch ./openwrt
-          #git clone https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.REPO_DATE }} != 'latest' ]] && echo -b ${{ inputs.REPO_BRANCH }} --single-branch|| echo )  ./openwrt
-
-          if [ "${{ inputs.REPO_DATE }}" != 'latest' ] ; then   
-            echo "-已选择锁定OpenWrt源码仓库日期"                        
-            if [  ${#REPO_DATE} = '25' ] ; then
-              echo "git clone https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")"
-              git clone https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")  ./openwrt
-              cd openwrt
-              git checkout $(git rev-list -n 1 --date=rfc --before=${{ inputs.REPO_DATE }} ${{ inputs.REPO_BRANCH }})       
-            else
-              git clone https://github.com/${{ inputs.OP_REPO }}  ./openwrt          
-              cd openwrt
-              git checkout ${{ inputs.REPO_DATE }}
-            fi            
-          else
-            echo "-已选择使用最新版本"
-            #echo "git clone --depth 1 https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")" 
-            git clone https://github.com/${{ inputs.OP_REPO }}  $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo -b "${{ inputs.REPO_BRANCH }}" --single-branch)  ./openwrt
-            cd openwrt
-          fi 
-
-          # 进行Cherry-Pick
-          if [ "${{ inputs.CHERRY_START }}" != 'n' ] ; then   
-            echo "-已选择Cherry-Pick"
-            if [ "${{ inputs.CHERRY_REPO}}" != 'n' ] ; then
-              git remote add cherry_repo https://github.com/${{ inputs.CHERRY_REPO }}
-              git fetch cherry_repo ${{ inputs.CHERRY_BRANCH }} 
-              #git checkout -b ${{ inputs.CHERRY_BRANCH }} 
-            fi
-            if [ "${{ inputs.CHERRY_END}}" != 'n' ] ; then
-              git cherry-pick ${{ inputs.CHERRY_START }}${{ inputs.CHERRY_END}}
-            else
-              git cherry-pick ${{ inputs.CHERRY_START }}
-            fi
-          fi
-
-          # 检出文件checkout
-          if [ "${{ inputs.CHECKOUT_FILE_COMMIT }}" != 'n' ] ; then   
-            echo "-已选择CheckOut节点：${{ inputs.CHECKOUT_FILE_COMMIT }}"
-            for f in ${{ inputs.CHECKOUT_FILE }}
-            do echo "--文件：$f" && git checkout ${{ inputs.CHECKOUT_FILE_COMMIT }} -- $f && git diff $f
+          if [ ! -z ${CONFIG_VERIFIED} ] ; then
+            for config in $CONFIG_VERIFIED
+            do
+              sed -i '$a'"${config}"'' ./t
             done
           fi
           
-          COMMITHASH=$(git rev-parse --short HEAD)
-          echo "COMMITHASH=$COMMITHASH" >> $GITHUB_ENV 
+          if [ ! -z ${CONFIG_TO_ADD} ] ; then
+            for config in $CONFIG_TO_ADD
+            do
+              sed -i '$a'"${config}"'' ./t
+            done
+          fi
 
-          echo "-源码$COMMITHASH日期为："
-          git show  --pretty=fuller $COMMITHASH | grep CommitDate
-          
-          #默认设置
-          #mkdir -p ./package/thinkcy
-          #cp -vr ../thinkcy-settings ./package/thinkcy       
-          cp -vr ../common-config/*.config ../$REPO_TYPE/config
-          
-          echo '当前执行步骤：3-更新menuconfig文件'          
-          chmod +x ../$REPO_TYPE/scripts/*.sh
-          [[ ${{ inputs.COMPILE_CONFIG_BASE }} != 'n' ]] && echo "基础配置COMPILE_CONFIG_BASE为：${{ inputs.COMPILE_CONFIG_BASE }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG_BASE }}.config > ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config 
-          [[ ${{ inputs.COMPILE_CONFIG_DIFF }} != 'n' ]] && echo "追加配置COMPILE_CONFIG_DIFF为：${{ inputs.COMPILE_CONFIG_DIFF }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG_DIFF }}.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config 
-          [[ ${{ inputs.COMPILE_CONFIG }} != 'n' ]] && echo "其他配置COMPILE_CONFIG为：${{ inputs.COMPILE_CONFIG }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG }}.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-
-          
-          
-          echo '当前执行步骤：4-设置ImageBuilder'    
-          if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
-              echo "-已选择编译IMAGEBUILDER"
-              echo "IMAGEBUILDER=y" >> $GITHUB_ENV
-              sed -i '/CONFIG_IB/d' ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              sed -i '/CONFIG_IB_STANDALONE/d' ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              sed -i '/CONFIG_SDK/d' ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              sed -i '/CONFIG_MAKE_TOOLCHAIN/d' ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              sed -i '/ALL_KMODS/d' ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config              
-              sed -i '/CONFIG_BUILD_NLS/d' ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config   
-              echo CONFIG_IB=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              echo CONFIG_IB_STANDALONE=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              echo CONFIG_SDK=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              echo CONFIG_MAKE_TOOLCHAIN=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              # echo CONFIG_ALL_KMODS=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-              echo CONFIG_BUILD_NLS=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config              
-          fi          
-          
-          echo '当前执行步骤：5-调整默认feed源'  
-          if [ "${{ inputs.DEFAULT_FEEDS }}" != 'n' ] ; then
-            cp ../$REPO_TYPE/scripts/${{ inputs.DEFAULT_FEEDS }} ./feeds.conf.default
-            echo "-已选择替换自带feeds源"
-          fi          
-          echo "-添加额外feeds源"
-          if [ "${{ inputs.EXTRA_FEEDS }}" != 'n' ] ; then
-            ../$REPO_TYPE/scripts/${{ inputs.EXTRA_FEEDS }}.sh
-          fi
-          
-          echo "-feeds.conf.default内容"
-          cat feeds.conf.default  
-          
-          echo "-删除未启用feeds源"
-          sed -i '/^#/d' ./feeds.conf.default
-          sed -i '/#/d' ./feeds.conf.default
-                    
-          echo '当前执行步骤：6-生成feeds.conf'          
-          if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then   
-            echo "-已选择根据源码日期锁定feeds日期"
-            ../scripts/select_feed_commit.sh
-          else
-            if [ "${{ inputs.FEEDS_DATE }}" != 'latest' ] ; then   
-                echo "-已选择单独锁定feeds日期"                             
-                    ../scripts/select_feed_commit.sh ${{ inputs.FEEDS_DATE }} 
-                    if [ "${{ inputs.NSS_DATE }}" != 'n' ] ; then
-                     echo "--已选择单独锁定nss_packages日期" 
-                     ../scripts/select_feed_commit.sh ${{ inputs.NSS_DATE }} nss_packages
-                    fi            
-            else
-                cp ./feeds.conf.default ./feeds.conf
-            fi   
-          fi
-          
-          echo "-feeds.conf内容"
-          cat feeds.conf
-                      
-          echo '当前执行步骤：7-执行custom_feeds.sh'
-          
-          #../scripts/add_package_common.sh
-          
-          if [ "${{ inputs.CUSTOM_FEEDS_SH }}" != 'n' ] ; then   
-            echo "-已选择${{ inputs.CUSTOM_FEEDS_SH }}"
-            echo "${{ inputs.CUSTOM_FEEDS_SH }}内容"
-            cat ../$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS_SH }}.sh
-            ../$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS_SH }}.sh
-          else 
-            echo '默认custom_feeds.sh内容'
-            cat ../$REPO_TYPE/scripts/custom_feeds.sh          
-            ../$REPO_TYPE/scripts/custom_feeds.sh            
-          fi
-                   
-          if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
-            echo '-当前执行步骤：确认ImageBuilder状态'
-            IB_CONFIG=$(cat .config | grep "CONFIG_IB=y")
-            if [[ "$IB_CONFIG" != "" ]] ;  then
-                echo "--存在CONFIG_IB=y"
-            else
-                echo "--不存在CONFIG_IB=y"
-            fi            
-          fi    
-                             
-          echo '当前执行步骤：8-修改版本号'
-          #删除lean的默认设置
-          #rm -rf ./package/lean/default-settings/  
-          
-          REPO_TAG=$(echo ${{ inputs.OP_REPO }} | sed 's|\/|.|')$([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo .${{ inputs.REPO_BRANCH }}||echo)
-          echo "REPO_TAG为：$REPO_TAG"
-          echo "REPO_TAG=$REPO_TAG" >> $GITHUB_ENV
-
-          if [ "${{ inputs.COMPILE_CONFIG }}" != 'n' ] ; then
-             COMPILE_CONFIG_TAG=${{ inputs.COMPILE_CONFIG }}
-          else
-             if [ "${{ inputs.COMPILE_CONFIG_DIFF }}" != 'n' ] ; then
-                COMPILE_CONFIG_TAG=${{ inputs.COMPILE_CONFIG_DIFF }}
-             else
-                COMPILE_CONFIG_TAG=${{ inputs.COMPILE_CONFIG_BASE }}
-             fi
-          fi
-          echo "COMPILE_CONFIG_TAG为：$COMPILE_CONFIG_TAG"
-          echo "COMPILE_CONFIG_TAG=$COMPILE_CONFIG_TAG" >> $GITHUB_ENV
-          
-          DATE_TAG=$(date +%Y%m%d)
-          
-          if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then
-               #sed -i "s|REVISION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-ImageBuilder-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-ImageBuilder-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-          else          
-               #sed -i "s|REVISION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-               sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-          fi
-          cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings
+          if [ ! -z ${CONFIG_TO_DEL} ] ; then
+            for config in $CONFIG_TO_DEL
+            do
+              sed -i '$a'"${config}"'' ./t
+            done
+          fi      
