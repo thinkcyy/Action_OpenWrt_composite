@@ -26,7 +26,7 @@ runs:
           echo $CONFIG_TO_ADD
           echo $CONFIG_TO_DEL
           
-          if [ ! ${CONFIG_VERIFIED} = "n" ] ; then
+          if [[ ! ${CONFIG_VERIFIED} = "n" ]]; then
           echo $CONFIG_VERIFIED
             for config in "$CONFIG_VERIFIED"
             do
@@ -35,7 +35,7 @@ runs:
             done
           fi
           
-          if [ ${CONFIG_TO_ADD} != "n" ] ; then
+          if [[ ${CONFIG_TO_ADD} != "n" ]] ; then
           echo $CONFIG_TO_ADD
             for config in $CONFIG_TO_ADD
             do ${CONFIG_TO_ADD}
@@ -45,7 +45,7 @@ runs:
             done
           fi
 
-          if [ ! -z ${CONFIG_TO_DEL} ] ; then
+          if [[ ! -z ${CONFIG_TO_DEL} ]] ; then
           echo $CONFIG_TO_DEL
             for config in $CONFIG_TO_DEL
             do
