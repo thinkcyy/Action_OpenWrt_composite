@@ -20,14 +20,10 @@ runs:
         CONFIG_TO_ADD: ${{ inputs.CONFIG_TO_ADD }}
         CONFIG_TO_DEL: ${{ inputs.CONFIG_TO_DEL }}
       run:  |
-          cat $(readlink -f $0)
+          #cat $(readlink -f $0)
           cd runner_root/openwrt
-          echo $CONFIG_VERIFIED
-          echo $CONFIG_TO_ADD
-          echo $CONFIG_TO_DEL
           
           if [[ ! -z ${CONFIG_VERIFIED} ]]; then
-          echo $CONFIG_VERIFIED
             for config in $CONFIG_VERIFIED
             do
               echo 添加$config
@@ -36,7 +32,6 @@ runs:
           fi
           
           if [[ ! -z ${CONFIG_TO_ADD}  ]] ; then
-          echo $CONFIG_TO_ADD
             for config in $CONFIG_TO_ADD
             do 
               echo 添加$config
@@ -46,7 +41,6 @@ runs:
           fi
 
           if [[ ! -z ${CONFIG_TO_DEL} ]] ; then
-          echo $CONFIG_TO_DEL
             for config in $CONFIG_TO_DEL
             do
               echo 添加$config
@@ -55,4 +49,3 @@ runs:
             done
           fi
 
-          tail -n 10 ./.config
