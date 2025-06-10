@@ -19,8 +19,8 @@ runs:
       run:  |
           cd runner_root/openwrt
           if [ ! -z ${CONFIG_VERIFIED} ] ; then
-          echo ${CONFIG_VERIFIED}
-            for config in $CONFIG_VERIFIED
+          echo ${{ inputs.CONFIG_VERIFIED }}
+            for config in ${{ inputs.CONFIG_VERIFIED }}
             do
               echo 添加$config
               echo $config >> ./.config
