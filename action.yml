@@ -3,13 +3,13 @@ description: 'Action'
 inputs:
   CONFIG_VERIFIED:  
     required: false
-    default: 'n'
+
   CONFIG_TO_ADD:  
     required: false
-    default: 'n'
+
   CONFIG_TO_DEL:  
     required: false
-    default: 'n'
+
 runs:
   using: "composite"
   steps:
