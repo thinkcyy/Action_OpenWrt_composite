@@ -32,7 +32,7 @@ runs:
             done
           fi
           
-          if [ ! -z ${CONFIG_TO_ADD} ] ; then
+          if [ ${CONFIG_TO_ADD} != "n" ] ; then
           echo $CONFIG_TO_ADD
             for config in $CONFIG_TO_ADD
             do ${CONFIG_TO_ADD}
