@@ -17,6 +17,7 @@ runs:
         CONFIG_TO_ADD: ${{ inputs.CONFIG_TO_ADD }}
         CONFIG_TO_DEL: ${{ inputs.CONFIG_TO_DEL }}
       run:  |
+          cat $(readlink -f $0)
           cd runner_root/openwrt
           echo $CONFIG_VERIFIED
           echo $CONFIG_TO_ADD
