@@ -26,7 +26,7 @@ runs:
           echo $CONFIG_TO_ADD
           echo $CONFIG_TO_DEL
           
-          if [[ ! ${CONFIG_VERIFIED} = "n" ]]; then
+          if [[ ! -z ${CONFIG_VERIFIED} ]]; then
           echo $CONFIG_VERIFIED
             for config in $CONFIG_VERIFIED
             do
