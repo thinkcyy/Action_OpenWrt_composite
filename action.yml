@@ -22,7 +22,6 @@ runs:
             for config in $CONFIG_VERIFIED
             do
               echo 添加$config
-              #sed -i '$a'"${config}"'\n' ./.config
               echo $config >> ./.config
             done
           fi
