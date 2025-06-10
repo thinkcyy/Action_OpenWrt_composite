@@ -47,3 +47,5 @@ runs:
               echo $config >> ./.config
             done
           fi
+
+          tail -n 10 ./.config
