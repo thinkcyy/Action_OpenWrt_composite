@@ -213,10 +213,10 @@ runs:
           function MERGECONF {
           for conf in $( ls ../$REPO_TYPE/config/${1}-*.config )
           do
-            cat $conf >> ../$REPO_TYPE/${1}-AUTOMERGE.config
+            cat $conf >> ../$REPO_TYPE/config/${1}-AUTOMERGE.config
           done
           echo ${1}-AUTOMERGE文件内容为：
-          cat ../$REPO_TYPE/${1}-AUTOMERGE.config
+          cat ../$REPO_TYPE/config/${1}-AUTOMERGE.config
           }
           #---------------------------------------------------config文件合并函数定义结束
           
