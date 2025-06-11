@@ -221,7 +221,7 @@ runs:
           #---------------------------------------------------config文件合并函数定义结束
           
           [[ ${{ inputs.COMPILE_CONFIG_BASE }} != 'n' ]] && echo "基础配置COMPILE_CONFIG_BASE为：${{ inputs.COMPILE_CONFIG_BASE }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG_BASE }}.config > ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config 
-          [[ ${{ inputs.COMPILE_CONFIG_DIFF }} != 'n' ]] && echo "追加配置COMPILE_CONFIG_DIFF为：${{ inputs.COMPILE_CONFIG_DIFF }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG_DIFF }}.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config 
+          [[ ${{ inputs.COMPILE_CONFIG_DIFF }} != 'n' ]] && echo "追加配置COMPILE_CONFIG_DIFF为：${{ inputs.COMPILE_CONFIG_DIFF }}" && (for conf in ${{ inputs.COMPILE_CONFIG_DIFF }} ; do cat ../$REPO_TYPE/config/${conf}.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config ; done)
           [[ ${{ inputs.COMPILE_CONFIG_AUTOMERGE }} != 'n' ]] && MERGECONF ${{ inputs.COMPILE_CONFIG_AUTOMERGE }} && echo "自动合并配置COMPILE_CONFIG_AUTOMERGE为：${{ inputs.COMPILE_CONFIG_AUTOMERGE }}-AUTOMERGE" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG_AUTOMERGE }}-AUTOMERGE.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
           [[ ${{ inputs.COMPILE_CONFIG }} != 'n' ]] && echo "其他配置COMPILE_CONFIG为：${{ inputs.COMPILE_CONFIG }}" && (for conf in ${{ inputs.COMPILE_CONFIG }} ; do cat ../$REPO_TYPE/config/${conf}.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config ; done)
           
