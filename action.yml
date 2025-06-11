@@ -13,6 +13,10 @@ inputs:
     description: 'CONFIG'
     required: false
     default: 'n'
+  COMPILE_CONFIG_AUTOMERGE: 
+    description: 'CONFIG'
+    required: false
+    default: 'n'    
   COMPILE_CONFIG: 
     description: 'CONFIG'
     required: false
@@ -200,17 +204,28 @@ runs:
           #默认设置
           #mkdir -p ./package/thinkcy
           #cp -vr ../thinkcy-settings ./package/thinkcy       
-          cp -vr ../common-config/*.config ../$REPO_TYPE/config
+          cp -r ../common-config/*.config ../$REPO_TYPE/config
           
-          echo '当前执行步骤：3-更新menuconfig文件'          
+          echo '当前执行步骤：3-更新menuconfig文件' 
           chmod +x ../$REPO_TYPE/scripts/*.sh
+          
+          #---------------------------------------------------config文件合并函数定义开始
+          function MERGECONF {
+          for conf in $( ls ../$REPO_TYPE/config/${1}-*.config )
+          do
+            cat $conf >> ../$REPO_TYPE/${1}-AUTOMERGE.config
+          done
+          echo ${1}-AUTOMERGE文件内容为：
+          cat ../$REPO_TYPE/${1}-AUTOMERGE.config
+          }
+          #---------------------------------------------------config文件合并函数定义结束
+          
           [[ ${{ inputs.COMPILE_CONFIG_BASE }} != 'n' ]] && echo "基础配置COMPILE_CONFIG_BASE为：${{ inputs.COMPILE_CONFIG_BASE }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG_BASE }}.config > ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config 
           [[ ${{ inputs.COMPILE_CONFIG_DIFF }} != 'n' ]] && echo "追加配置COMPILE_CONFIG_DIFF为：${{ inputs.COMPILE_CONFIG_DIFF }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG_DIFF }}.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config 
+          [[ ${{ inputs.COMPILE_CONFIG_AUTOMERGE }} != 'n' ]] && MERGECONF ${{ inputs.COMPILE_CONFIG_AUTOMERGE }} && echo "自动合并配置COMPILE_CONFIG_AUTOMERGE为：${{ inputs.COMPILE_CONFIG_AUTOMERGE }}-AUTOMERGE" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG_AUTOMERGE }}-AUTOMERGE.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
           [[ ${{ inputs.COMPILE_CONFIG }} != 'n' ]] && echo "其他配置COMPILE_CONFIG为：${{ inputs.COMPILE_CONFIG }}" && cat ../$REPO_TYPE/config/${{ inputs.COMPILE_CONFIG }}.config >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
-
           
-          
-          echo '当前执行步骤：4-设置ImageBuilder'    
+          echo '当前执行步骤：4-设置ImageBuilder'
           if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
               echo "-已选择编译IMAGEBUILDER"
               echo "IMAGEBUILDER=y" >> $GITHUB_ENV
@@ -226,13 +241,14 @@ runs:
               echo CONFIG_MAKE_TOOLCHAIN=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
               # echo CONFIG_ALL_KMODS=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config
               echo CONFIG_BUILD_NLS=y >> ../$REPO_TYPE/config/config-${{ inputs.ROUTER_MODEL }}.config              
-          fi          
+          fi
           
-          echo '当前执行步骤：5-调整默认feed源'  
+          echo '当前执行步骤：5-调整默认feed源'
           if [ "${{ inputs.DEFAULT_FEEDS }}" != 'n' ] ; then
             cp ../$REPO_TYPE/scripts/${{ inputs.DEFAULT_FEEDS }} ./feeds.conf.default
             echo "-已选择替换自带feeds源"
-          fi          
+          fi
+          
           echo "-添加额外feeds源"
           if [ "${{ inputs.EXTRA_FEEDS }}" != 'n' ] ; then
             ../$REPO_TYPE/scripts/${{ inputs.EXTRA_FEEDS }}.sh
@@ -245,7 +261,7 @@ runs:
           sed -i '/^#/d' ./feeds.conf.default
           sed -i '/#/d' ./feeds.conf.default
                     
-          echo '当前执行步骤：6-生成feeds.conf'          
+          echo '当前执行步骤：6-生成feeds.conf'
           if [ "${{ inputs.MATCH_FEED_HASH }}" = 'y' ] ; then   
             echo "-已选择根据源码日期锁定feeds日期"
             ../scripts/select_feed_commit.sh
@@ -256,17 +272,17 @@ runs:
                     if [ "${{ inputs.NSS_DATE }}" != 'n' ] ; then
                      echo "--已选择单独锁定nss_packages日期" 
                      ../scripts/select_feed_commit.sh ${{ inputs.NSS_DATE }} nss_packages
-                    fi            
+                    fi
             else
                 cp ./feeds.conf.default ./feeds.conf
-            fi   
+            fi
           fi
           
           echo "-feeds.conf内容"
           cat feeds.conf
-                      
+
           echo '当前执行步骤：7-执行custom_feeds.sh'
-          
+
           #../scripts/add_package_common.sh
           
           if [ "${{ inputs.CUSTOM_FEEDS_SH }}" != 'n' ] ; then   
@@ -276,24 +292,11 @@ runs:
             ../$REPO_TYPE/scripts/${{ inputs.CUSTOM_FEEDS_SH }}.sh
           else 
             echo '默认custom_feeds.sh内容'
-            cat ../$REPO_TYPE/scripts/custom_feeds.sh          
-            ../$REPO_TYPE/scripts/custom_feeds.sh            
+            cat ../$REPO_TYPE/scripts/custom_feeds.sh
+            ../$REPO_TYPE/scripts/custom_feeds.sh
           fi
                    
-          if [ "${{ inputs.IMAGEBUILDER }}" = 'y' ] ; then
-            echo '-当前执行步骤：确认ImageBuilder状态'
-            IB_CONFIG=$(cat .config | grep "CONFIG_IB=y")
-            if [[ "$IB_CONFIG" != "" ]] ;  then
-                echo "--存在CONFIG_IB=y"
-            else
-                echo "--不存在CONFIG_IB=y"
-            fi            
-          fi    
-                             
           echo '当前执行步骤：8-修改版本号'
-          #删除lean的默认设置
-          #rm -rf ./package/lean/default-settings/  
-          
           REPO_TAG=$(echo ${{ inputs.OP_REPO }} | sed 's|\/|.|')$([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo .${{ inputs.REPO_BRANCH }}||echo)
           echo "REPO_TAG为：$REPO_TAG"
           echo "REPO_TAG=$REPO_TAG" >> $GITHUB_ENV
@@ -307,16 +310,12 @@ runs:
                 COMPILE_CONFIG_TAG=${{ inputs.COMPILE_CONFIG_BASE }}
              fi
           fi
-          echo "COMPILE_CONFIG_TAG为：$COMPILE_CONFIG_TAG"
           echo "COMPILE_CONFIG_TAG=$COMPILE_CONFIG_TAG" >> $GITHUB_ENV
           
           DATE_TAG=$(date +%Y%m%d)
           
           if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then
-               #sed -i "s|REVISION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-ImageBuilder-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
                sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-ImageBuilder-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           else          
-               #sed -i "s|REVISION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
                sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           fi
-          cat ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings
