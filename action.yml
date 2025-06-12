@@ -38,8 +38,14 @@ runs:
           echo "KERNEL=$KERNEL" >> $GITHUB_ENV
           tag_name="$tag_name"-"("$(date +%Y%m%d-%H%M)")"-$KERNEL-${{ env.COMMITHASH }}
           echo $tag_name
+
+          # 为文件名准备的删除非标字符tag
+          TAG_NAME_F=${tag_name//\(/}
+          TAG_NAME_F=${TAG_NAME_F//\)/}
+          echo $TAG_NAME_F
           
           echo "TAG_NAME="$tag_name"" >> $GITHUB_ENV  
+          echo "TAG_NAME_F="$TAG_NAME_F"" >> $GITHUB_ENV  
 
     - name: Organize files
       shell: bash
@@ -55,13 +61,13 @@ runs:
           echo '当前执行步骤：12.1-组织配置文件：'
           cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo") ./artifact/
           cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.manifest") ./artifact/
-          cp -r ./openwrt/.config ./artifact/"defconfig-${{ env.TAG_NAME }}.config"
+          cp -r ./openwrt/.config ./artifact/"defconfig-${{ env.TAG_NAME_F }}.config"
           cp -rf $(find ./openwrt/bin/ -type f -name "kernel-*") ./artifact/
           
 
           echo '当前执行步骤：12.2-组织bin文件：'
           echo '-sysupgrade文件：'
-          rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME }}.bin/' *
+          rename 's/sysupgrade.bin/sysupgrade-${{ env.TAG_NAME_F }}.bin/' *
           cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sysupgrade*") ./artifact/
           
           
@@ -69,8 +75,8 @@ runs:
           if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then             
              cp -rf $(find ./openwrt/bin/targets/ -type f -name "*imagebuilder*") ./artifact/
              cd ./artifact/
-             rename 's/.tar.xz/-${{ env.TAG_NAME }}.tar.xz/' *
-             rename 's/.tar.zst/-${{ env.TAG_NAME }}.tar.zst/' *
+             rename 's/.tar.xz/-${{ env.TAG_NAME_F }}.tar.xz/' *
+             rename 's/.tar.zst/-${{ env.TAG_NAME_F }}.tar.zst/' *
           fi
 
           echo '-产出文件总览：'
