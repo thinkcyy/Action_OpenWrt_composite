@@ -36,7 +36,7 @@ runs:
           # KERNEL=$(echo $K2 | cut -d '~' -f1) || KERNEL=$(echo $K2 | cut -d '~' -f1)
           echo $KERNEL
           echo "KERNEL=$KERNEL" >> $GITHUB_ENV
-          tag_name="$tag_name"-"🍂"$(date +%Y%m%d-%H%M)"🍂"-$KERNEL-${{ env.COMMITHASH }}
+          tag_name="$tag_name"-"("$(date +%Y%m%d-%H%M)")"-$KERNEL-${{ env.COMMITHASH }}
           echo $tag_name
           
           echo "TAG_NAME="$tag_name"" >> $GITHUB_ENV  
