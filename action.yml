@@ -48,5 +48,8 @@ runs:
             done
           fi
 
+          echo 最后10行内容
+          tail -n 10 ./.config
+
           make defconfig
 
