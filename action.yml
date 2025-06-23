@@ -101,10 +101,22 @@ inputs:
     description: 
     required: false
     default: 'n'
+  TAG_PREFIX: 
+    description: 
+    required: false
+  CONFIG_VERIFIED:  
+    required: false
+  CONFIG_TO_ADD:  
+    required: false
+  CONFIG_TO_DEL:  
+    required: false
 runs:
   using: "composite"
   steps:
-    - name: PrepareSource      
+    - name: Initialization
+      uses: thinkcyy/Action_Initialization@main
+  
+    - name: PrepareSource
       shell: bash
       env:
         ROUTER_MODEL: ${{ inputs.ROUTER_MODEL }}   
@@ -319,3 +331,45 @@ runs:
           else          
                sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           fi
+
+    - name: Modify config
+      uses: thinkcyy/Action_OpenWrt_composite@config_add
+      with:
+        CONFIG_VERIFIED: ${{ inputs.CONFIG_VERIFIED }}
+        CONFIG_TO_ADD: ${{ inputs.CONFIG_TO_ADD }}
+        CONFIG_TO_DEL: ${{ inputs.CONFIG_TO_DEL }}
+                      
+    - name: Download package sources
+      working-directory: ${{ github.workspace }}/runner_root/openwrt
+      run: make download V=s
+
+    - name: Build tools
+      working-directory: ${{ github.workspace }}/runner_root/openwrt
+      run: |
+        make tools/install -j$(nproc) V=s || \
+        make tools/install V=s
+        
+    - name: Build toolchain
+      working-directory: ${{ github.workspace }}/runner_root/openwrt
+      run: |
+        make toolchain/install -j$(nproc) V=s || \
+        make toolchain/install V=s
+
+    - name: Build target images
+      working-directory: ${{ github.workspace }}/runner_root/openwrt
+      run: |
+       make -i -j$(nproc) V=s || make -i V=s
+       # make -j$(nproc) V=s || make V=s
+
+    - name: Upload
+      uses: thinkcyy/Action_OpenWrt_composite@release
+      
+    - name: Create release
+      uses: ncipollo/release-action@main
+      with:
+        name: "$( [[ ! -z "${{ env.TAG_PREFIX }}" ]] && echo "${{ env.TAG_PREFIX }}-"${{ env.TAG_NAME }}"
+        allowUpdates: true
+        tag: ${{ env.TAG_NAME }}
+        replacesArtifacts: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: ./runner_root/artifact/*
