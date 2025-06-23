@@ -166,7 +166,7 @@ runs:
           #git clone https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.REPO_DATE }} != 'latest' ]] && echo -b ${{ inputs.REPO_BRANCH }} --single-branch|| echo )  ./openwrt
 
           if [ "${{ inputs.REPO_DATE }}" != 'latest' ] ; then   
-            echo "-已选择锁定OpenWrt源码仓库日期"                        
+            echo "-已选择锁定OpenWrt源码仓库日期" 
             if [  ${#REPO_DATE} = '25' ] ; then
               echo "git clone https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")"
               git clone https://github.com/${{ inputs.OP_REPO }} $([[ ${{ inputs.REPO_BRANCH }} != 'n' ]] && echo "-b ${{ inputs.REPO_BRANCH }} --single-branch")  ./openwrt
