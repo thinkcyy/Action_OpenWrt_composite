@@ -368,4 +368,14 @@ runs:
 
     - name: Upload
       uses: thinkcyy/Action_OpenWrt_composite@release
-    
+
+    - name: Create release
+      uses: ncipollo/release-action@main
+      secrets:
+        token: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: "[Cron]-${{ env.TAG_NAME }}"
+        allowUpdates: true
+        tag: ${{ env.TAG_NAME }}
+        replacesArtifacts: true         
+        artifacts: ./runner_root/artifact/*       
