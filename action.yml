@@ -334,6 +334,11 @@ runs:
                sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           fi
 
+         RELEASE_NAME=$([[ ! -z "${{ inputs.TAG_PREFIX }}" ]] && echo "${{ inputs.TAG_PREFIX }}-)${{ env.TAG_NAME }}
+         echo Release名称为：$RELEASE_NAME
+         echo "RELEASE_NAME="$RELEASE_NAME"" >> $GITHUB_ENV
+         echo ${{ env.TRELEASE_NAME }}
+
     - name: Modify config
       if:  (! -z ${{ inputs.CONFIG_VERIFIED }}) -o (! -z ${{ inputs.CONFIG_TO_ADD }}) -o (! -z ${{ inputs.CONFIG_TO_DEL }})
       uses: thinkcyy/Action_OpenWrt_composite@config_add
@@ -374,7 +379,7 @@ runs:
     - name: Create release
       uses: ncipollo/release-action@main
       with:
-        name: "$( [[ ! -z "${{ inputs.TAG_PREFIX }}" ]] && echo "${{ inputs.TAG_PREFIX }}-")${{ env.TAG_NAME }}"
+        name: "${{ env.RELEASE_NAME }}"
         allowUpdates: true
         tag: ${{ env.TAG_NAME }}
         token: ${{ inputs.token }}
