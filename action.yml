@@ -368,14 +368,4 @@ runs:
 
     - name: Upload
       uses: thinkcyy/Action_OpenWrt_composite@release
-      
-    - name: Create release
-      uses: ncipollo/release-action@main
-      secrets: inherit
-      with:
-        name: $( [[ ! -z "${{ inputs.TAG_PREFIX }}" ]] && echo "${{ inputs.TAG_PREFIX }}-")${{ env.TAG_NAME }}"
-        allowUpdates: true
-        tag: ${{ env.TAG_NAME }}
-        replacesArtifacts: true
-        token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: ./runner_root/artifact/*
+    
