@@ -1,5 +1,8 @@
 name: 'Action_OpenWrt_composite'
 description: 'Action'
+secrets:
+  token:
+    required: true
 inputs:
   ROUTER_MODEL:  
     description: 'MODEL'
@@ -375,6 +378,6 @@ runs:
         name: "[Cron]-${{ env.TAG_NAME }}"
         allowUpdates: true
         tag: ${{ env.TAG_NAME }}
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.token }}
         replacesArtifacts: true         
         artifacts: ./runner_root/artifact/*       
