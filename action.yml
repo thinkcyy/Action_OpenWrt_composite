@@ -342,22 +342,26 @@ runs:
                       
     - name: Download package sources
       working-directory: ${{ github.workspace }}/runner_root/openwrt
+      shell: bash
       run: make download V=s
 
     - name: Build tools
       working-directory: ${{ github.workspace }}/runner_root/openwrt
+      shell: bash
       run: |
         make tools/install -j$(nproc) V=s || \
         make tools/install V=s
         
     - name: Build toolchain
       working-directory: ${{ github.workspace }}/runner_root/openwrt
+      shell: bash
       run: |
         make toolchain/install -j$(nproc) V=s || \
         make toolchain/install V=s
 
     - name: Build target images
       working-directory: ${{ github.workspace }}/runner_root/openwrt
+      shell: bash
       run: |
        make -i -j$(nproc) V=s || make -i V=s
        # make -j$(nproc) V=s || make V=s
