@@ -372,7 +372,7 @@ runs:
     - name: Create release
       uses: ncipollo/release-action@main
       with:
-        name: "$( [[ ! -z "${{ inputs.TAG_PREFIX }}" ]] && echo "${{ inputs.TAG_PREFIX }}-")"${{ env.TAG_NAME }}"
+        name: $( [[ ! -z "${{ inputs.TAG_PREFIX }}" ]] && echo "${{ inputs.TAG_PREFIX }}-")${{ env.TAG_NAME }}"
         allowUpdates: true
         tag: ${{ env.TAG_NAME }}
         replacesArtifacts: true
