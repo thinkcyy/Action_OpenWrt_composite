@@ -333,6 +333,7 @@ runs:
           fi
 
     - name: Modify config
+      if: [[ ! -z ${{ inputs.CONFIG_VERIFIED }} -o ! -z ${{ inputs.CONFIG_TO_ADD }} -o ! -z ${{ inputs.CONFIG_TO_DEL }} ]]
       uses: thinkcyy/Action_OpenWrt_composite@config_add
       with:
         CONFIG_VERIFIED: ${{ inputs.CONFIG_VERIFIED }}
