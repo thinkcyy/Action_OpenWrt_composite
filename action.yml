@@ -371,8 +371,7 @@ runs:
 
     - name: Create release
       uses: ncipollo/release-action@main
-      secrets:
-        token: ${{ secrets.GITHUB_TOKEN }}
+      secrets: inherit
       with:
         name: "[Cron]-${{ env.TAG_NAME }}"
         allowUpdates: true
