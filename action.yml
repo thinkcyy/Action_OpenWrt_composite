@@ -47,6 +47,13 @@ runs:
           echo "TAG_NAME="$tag_name"" >> $GITHUB_ENV  
           echo "TAG_NAME_F="$TAG_NAME_F"" >> $GITHUB_ENV  
 
+          RELEASE_NAME=${{ env.TAG_NAME }}
+          echo Release名称为：$RELEASE_NAME
+          [[ ! -z "${{ env.TAG_PREFIX }}" ]] && RELEASE_NAME=${{ env.TAG_PREFIX }}-${{ env.TAG_NAME }}
+          echo Release名称为：$RELEASE_NAME
+          echo "RELEASE_NAME="$RELEASE_NAME"" >> $GITHUB_ENV
+          echo ${{ env.TRELEASE_NAME }}
+
     - name: Organize files
       shell: bash
       run: |                             
