@@ -129,6 +129,7 @@ runs:
         IMAGEBUILDER: ${{ inputs.IMAGEBUILDER }}
         ACTION_DATE: ${{ inputs.ACTION_DATE }}
         FEEDS_DATE: ${{ inputs.FEEDS_DATE }}
+        RELEASE_NAME: 
       run:  |
           echo "ROUTER_MODEL=${{ inputs.ROUTER_MODEL }}" >> $GITHUB_ENV
           echo "COMPILE_CONFIG=${{ inputs.COMPILE_CONFIG }}" >> $GITHUB_ENV
@@ -335,7 +336,7 @@ runs:
           fi
 
          RELEASE_NAME=${{ env.TAG_NAME }}
-         RELEASE_NAME=${{ inputs.TAG_PREFIX }}-${{ env.TAG_NAME }}
+         [[ ! -z "${{ inputs.TAG_PREFIX }}" ]] && RELEASE_NAME=${{ inputs.TAG_PREFIX }}-${{ env.TAG_NAME }}
          echo Release名称为：$RELEASE_NAME
          echo "RELEASE_NAME="$RELEASE_NAME"" >> $GITHUB_ENV
          echo ${{ env.TRELEASE_NAME }}
