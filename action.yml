@@ -101,7 +101,7 @@ inputs:
     description: 
     required: false
     default: 'n'
-  TAG_PREFIX: 
+  RELEASE_PREFIX: 
     description: 
     required: false
   CONFIG_VERIFIED:  
@@ -375,7 +375,7 @@ runs:
     - name: Generating Release name
       shell: bash
       run:  |
-        [[ ! -z "${{ inputs.TAG_PREFIX }}" ]] && RELEASE_NAME="${{ inputs.TAG_PREFIX }}-${{ env.TAG_NAME }}" || RELEASE_NAME="${{ env.TAG_NAME }}"
+        [[ ! -z "${{ inputs.RELEASE_PREFIX }}" ]] && RELEASE_NAME="${{ inputs.RELEASE_PREFIX }}-${{ env.TAG_NAME }}" || RELEASE_NAME="${{ env.TAG_NAME }}"
         echo RELEASE_NAME为：$RELEASE_NAME
         echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
           
