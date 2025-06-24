@@ -336,7 +336,8 @@ runs:
           fi
 
          RELEASE_NAME=${{ env.TAG_NAME }}
-         [[ ! -z "${{ inputs.TAG_PREFIX }}" ]] && RELEASE_NAME=${{ inputs.TAG_PREFIX }}-${{ env.TAG_NAME }}
+         echo Release名称为：$RELEASE_NAME
+         #[[ ! -z "${{ inputs.TAG_PREFIX }}" ]] && RELEASE_NAME=${{ inputs.TAG_PREFIX }}-${{ env.TAG_NAME }}
          echo Release名称为：$RELEASE_NAME
          echo "RELEASE_NAME="$RELEASE_NAME"" >> $GITHUB_ENV
          echo ${{ env.TRELEASE_NAME }}
