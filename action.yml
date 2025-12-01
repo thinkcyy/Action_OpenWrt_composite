@@ -136,7 +136,7 @@ runs:
           echo "IMAGEBUILDER=${{ inputs.IMAGEBUILDER }}" >> $GITHUB_ENV
           echo "FILES_CONFIG=${{ inputs.FILES_CONFIG }}" >> $GITHUB_ENV
           echo "OP_REPO=${{ inputs.OP_REPO }}" >> $GITHUB_ENV
-          [[ ${{ inputs.REPO_BRANCH }} = n ]] && ( echo "REPO_BRANCH=${{ env.REPO_BRANCH }} " ) || echo "REPO_BRANCH=${{ inputs.REPO_BRANCH }}" >> $GITHUB_ENV
+          [[ ${{ inputs.REPO_BRANCH }} = n ]] && ( echo "REPO_BRANCH=${{ env.LAST_TAG }} " ) || echo "REPO_BRANCH=${{ inputs.REPO_BRANCH }}" >> $GITHUB_ENV
           echo "REPO_DEPTH=${{ inputs.REPO_DEPTH }}" >> $GITHUB_ENV
           echo "REPO_DATE=${{ inputs.REPO_DATE }}" >> $GITHUB_ENV
           echo "REPO_TYPE=${{ inputs.REPO_TYPE }}" >> $GITHUB_ENV
