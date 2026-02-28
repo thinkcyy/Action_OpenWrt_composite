@@ -110,6 +110,8 @@ inputs:
     required: false
   CONFIG_TO_DEL:  
     required: false
+  REPLACE_IB:  
+    required: false
   token:
     required: true    
 runs:
@@ -335,8 +337,14 @@ runs:
                sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
           fi
 
+          
+          if [ ! -z "${{ inputs.REPLACE_IB }}" ] ; then   
+            echo "-替换IB源码"
+            cp -r ../imagebuilder ./target/
+          fi      
+
     - name: Modify config
-      if:  (! -z ${{ inputs.CONFIG_VERIFIED }}) -o (! -z ${{ inputs.CONFIG_TO_ADD }}) -o (! -z ${{ inputs.CONFIG_TO_DEL }})
+      if:  (! -z ${{ inputs.CONFIG_VERIFIED }}) -o (! -z ${{ inputs.CONFIG_TO_ADD }}) -o (! -z ${{ inputs.CONFIG_TO_DEL }}) 
       uses: thinkcyy/Action_OpenWrt_composite@config_add
       with:
         CONFIG_VERIFIED: ${{ inputs.CONFIG_VERIFIED }}
