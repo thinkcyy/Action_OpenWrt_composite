@@ -269,6 +269,8 @@ runs:
           echo "-添加额外feeds源"
           if [ "${{ inputs.EXTRA_FEEDS }}" != 'n' ] ; then
             ../$REPO_TYPE/scripts/${{ inputs.EXTRA_FEEDS }}.sh
+          else
+            ../$REPO_TYPE/scripts/add_feeds.sh
           fi
           
           echo "-feeds.conf.default内容"
