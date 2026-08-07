@@ -219,8 +219,8 @@ runs:
           git show  --pretty=fuller $COMMITHASH | grep CommitDate
           
           #默认设置
-          #mkdir -p ./package/thinkcy
-          #cp -vr ../thinkcy-settings ./package/thinkcy       
+          #mkdir -p ./package/thinkcy_package
+          #cp -vr ../thinkcy-settings ./package/thinkcy_package       
           cp -r ../common-config/*.config ../$REPO_TYPE/config
           
           echo '当前执行步骤：3-更新menuconfig文件' 
@@ -334,10 +334,10 @@ runs:
           DATE_TAG=$(date +%Y%m%d)
           
           # if [ "${{ env.IMAGEBUILDER }}" = 'y' ] ; then
-          #      sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-ImageBuilder-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+          #      sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-ImageBuilder-${DATE_TAG}|g" ./package/thinkcy_package/thinkcy-settings/files/99-thinkcy-settings 
           # else          
-          # sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
-          sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${DATE_TAG}|g" ./package/thinkcy/thinkcy-settings/files/99-thinkcy-settings 
+          # sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${COMPILE_CONFIG_TAG}-${{ inputs.FILES_CONFIG }}-${DATE_TAG}|g" ./package/thinkcy_package/thinkcy-settings/files/99-thinkcy-settings 
+          sed -i "s|DESCRIPTION_tobeupdated|${REPO_TAG}-${DATE_TAG}|g" ./package/thinkcy_package/thinkcy-settings/files/99-thinkcy-settings 
           # fi
 
           
