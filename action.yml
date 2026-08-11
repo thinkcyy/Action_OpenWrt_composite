@@ -104,5 +104,5 @@ runs:
              cd ./runner_root
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*sdk*") ./artifact/
              cp -vrf $(find ./openwrt/bin/targets/ -type f -name "*toolchain*") ./artifact/
-             cp .openwrt/tree_feeds.txt ./artifact/tree_feeds.${{ env.TAG_NAME_F }}.txt
+             cp ./openwrt/tree_feeds.txt ./artifact/tree_feeds.${{ env.TAG_NAME_F }}.txt
           set -e
