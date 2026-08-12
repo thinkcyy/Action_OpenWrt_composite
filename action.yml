@@ -52,4 +52,5 @@ runs:
           tail -n 10 ./.config
 
           make defconfig
+          cat ./.config
 
